@@ -1,0 +1,2467 @@
+task 278
+
+CLASS Owner
+    ATTRIBUTES
+        ownerName : TEXT
+        phoneNumber : TEXT
+        pets : LIST<Pet>
+
+    CONSTRUCTOR(name : TEXT, phone : TEXT)
+        SET ownerName TO name
+        SET phoneNumber TO phone
+        SET pets TO LIST []
+    END CONSTRUCTOR
+
+    METHODS
+        ADD_PET(p : Pet)
+            ADD p TO pets
+        END METHOD
+
+        GET_NAME()
+            RETURN ownerName
+        END METHOD
+END CLASS
+
+CLASS Species
+    ATTRIBUTES
+        speciesName : TEXT
+        careRequirements : TEXT
+
+    CONSTRUCTOR(name : TEXT, requirements : TEXT)
+        SET speciesName TO name
+        SET careRequirements TO requirements
+    END CONSTRUCTOR
+
+    METHODS
+        GET_CARE_REQUIREMENTS()
+            RETURN careRequirements
+        END METHOD
+END CLASS
+
+CLASS Pet
+    ATTRIBUTES
+        petName : TEXT
+        dateOfBirth : TEXT
+        species : Species
+        medicalHistory : LIST<Examination>
+
+    CONSTRUCTOR(name : TEXT, dob : TEXT, sp : Species)
+        SET petName TO name
+        SET dateOfBirth TO dob
+        SET species TO sp
+        SET medicalHistory TO LIST []
+    END CONSTRUCTOR
+
+    METHODS
+        GET_AGE(currentYear : NUMBER, birthYear : NUMBER)
+            RETURN currentYear - birthYear
+        END METHOD
+
+        ADD_MEDICAL_HISTORY(exam : Examination)
+            ADD exam TO medicalHistory
+        END METHOD
+
+        GET_NAME()
+            RETURN petName
+        END METHOD
+END CLASS
+
+CLASS VitalSign
+    ATTRIBUTES
+        signName : TEXT
+        value : NUMBER
+        minimumSafeValue : NUMBER
+        maximumSafeValue : NUMBER
+
+    CONSTRUCTOR(name : TEXT, v : NUMBER, min : NUMBER, max : NUMBER)
+        SET signName TO name
+        SET value TO v
+        SET minimumSafeValue TO min
+        SET maximumSafeValue TO max
+    END CONSTRUCTOR
+
+    METHODS
+        IS_SAFE()
+            IF value LESS THAN minimumSafeValue OR value GREATER THAN maximumSafeValue THEN
+                RETURN FALSE
+            ELSE
+                RETURN TRUE
+            END IF
+        END METHOD
+END CLASS
+
+CLASS Treatment
+    ATTRIBUTES
+        treatmentName : TEXT
+        cost : NUMBER
+
+    CONSTRUCTOR(name : TEXT, c : NUMBER)
+        SET treatmentName TO name
+        SET cost TO c
+    END CONSTRUCTOR
+
+    METHODS
+        GET_COST()
+            RETURN cost
+        END METHOD
+END CLASS
+
+CLASS Examination
+    ATTRIBUTES
+        diagnosis : TEXT
+        vitalSigns : LIST<VitalSign>
+        treatments : LIST<Treatment>
+
+    CONSTRUCTOR(d : TEXT)
+        SET diagnosis TO d
+        SET vitalSigns TO LIST []
+        SET treatments TO LIST []
+    END CONSTRUCTOR
+
+    METHODS
+        ADD_VITAL_SIGN(v : VitalSign)
+            ADD v TO vitalSigns
+        END METHOD
+
+        ADD_TREATMENT(t : Treatment)
+            ADD t TO treatments
+        END METHOD
+
+        IS_URGENT()
+            REPEAT FROM I = 1 TO SIZE OF vitalSigns
+                SET V TO vitalSigns[I]
+
+                IF NOT V.IS_SAFE() THEN
+                    RETURN TRUE
+                END IF
+            END REPEAT
+
+            RETURN FALSE
+        END METHOD
+
+        GET_TREATMENT_TOTAL()
+            SET total TO 0
+
+            REPEAT FROM I = 1 TO SIZE OF treatments
+                SET T TO treatments[I]
+                SET total TO total + T.GET_COST()
+            END REPEAT
+
+            RETURN total
+        END METHOD
+END CLASS
+
+CLASS Visit
+    ATTRIBUTES
+        visitDate : TEXT
+        pet : Pet
+        vetName : TEXT
+        examinations : LIST<Examination>
+
+    CONSTRUCTOR(date : TEXT, p : Pet, vet : TEXT)
+        SET visitDate TO date
+        SET pet TO p
+        SET vetName TO vet
+        SET examinations TO LIST []
+    END CONSTRUCTOR
+
+    METHODS
+        ADD_EXAMINATION(exam : Examination)
+            ADD exam TO examinations
+            pet.ADD_MEDICAL_HISTORY(exam)
+        END METHOD
+
+        GET_VISIT_TOTAL()
+            SET total TO 0
+
+            REPEAT FROM I = 1 TO SIZE OF examinations
+                SET E TO examinations[I]
+                SET total TO total + E.GET_TREATMENT_TOTAL()
+            END REPEAT
+
+            RETURN total
+        END METHOD
+END CLASS
+
+START
+BEGIN
+    CREATE OBJECT catSpecies OF Species("Cat", "Needs vaccination, grooming, and regular checkups")
+
+    CREATE OBJECT owner1 OF Owner("Ahmed", "91234567")
+
+    CREATE OBJECT pet1 OF Pet("Luna", "2020-04-15", catSpecies)
+
+    owner1.ADD_PET(pet1)
+
+    CREATE OBJECT visit1 OF Visit("2026-07-05", pet1, "Dr. Sara")
+
+    CREATE OBJECT exam1 OF Examination("High fever and possible infection")
+
+    CREATE OBJECT temperature OF VitalSign("Temperature", 40, 37, 39)
+    CREATE OBJECT heartRate OF VitalSign("Heart Rate", 120, 80, 140)
+
+    exam1.ADD_VITAL_SIGN(temperature)
+    exam1.ADD_VITAL_SIGN(heartRate)
+
+    CREATE OBJECT treatment1 OF Treatment("Antibiotic Injection", 15)
+    CREATE OBJECT treatment2 OF Treatment("Fever Medicine", 8)
+
+    exam1.ADD_TREATMENT(treatment1)
+    exam1.ADD_TREATMENT(treatment2)
+
+    visit1.ADD_EXAMINATION(exam1)
+
+    IF exam1.IS_URGENT() THEN
+        DISPLAY "Examination is urgent"
+    ELSE
+        DISPLAY "Examination is not urgent"
+    END IF
+
+    DISPLAY "Pet Name: " + pet1.GET_NAME()
+    DISPLAY "Visit Total: " + visit1.GET_VISIT_TOTAL()
+
+END
+STOP
+
+task 279
+
+CLASS Film
+    ATTRIBUTES
+        title : TEXT
+        duration : NUMBER
+        genre : TEXT
+
+    CONSTRUCTOR(t : TEXT, d : NUMBER, g : TEXT)
+        SET title TO t
+        SET duration TO d
+        SET genre TO g
+    END CONSTRUCTOR
+
+    METHODS
+        GET_TITLE()
+            RETURN title
+        END METHOD
+END CLASS
+
+CLASS Customer
+    ATTRIBUTES
+        customerName : TEXT
+        phoneNumber : TEXT
+
+    CONSTRUCTOR(name : TEXT, phone : TEXT)
+        SET customerName TO name
+        SET phoneNumber TO phone
+    END CONSTRUCTOR
+
+    METHODS
+        GET_NAME()
+            RETURN customerName
+        END METHOD
+END CLASS
+
+CLASS Ticket
+    ATTRIBUTES
+        customerName : TEXT
+        seatNumber : TEXT
+        showtime : Showtime
+
+    CONSTRUCTOR(customer : TEXT, seat : TEXT, s : Showtime)
+        SET customerName TO customer
+        SET seatNumber TO seat
+        SET showtime TO s
+    END CONSTRUCTOR
+
+    METHODS
+        GET_SEAT_NUMBER()
+            RETURN seatNumber
+        END METHOD
+END CLASS
+
+CLASS Screen
+    ATTRIBUTES
+        screenNumber : NUMBER
+        capacity : NUMBER
+        seatingLayout : TEXT
+        showtimes : LIST<Showtime>
+
+    CONSTRUCTOR(num : NUMBER, cap : NUMBER, layout : TEXT)
+        SET screenNumber TO num
+        SET capacity TO cap
+        SET seatingLayout TO layout
+        SET showtimes TO LIST []
+    END CONSTRUCTOR
+
+    METHODS
+        GET_CAPACITY()
+            RETURN capacity
+        END METHOD
+
+        HAS_OVERLAP(start : TEXT, end : TEXT)
+            REPEAT FROM I = 0 TO SIZE OF showtimes -1
+                SET S TO showtimes[I]
+
+                IF start LESS THAN S.GET_END_TIME() AND end GREATER THAN S.GET_START_TIME() THEN
+                    RETURN TRUE
+                END IF
+            END REPEAT
+
+            RETURN FALSE
+        END METHOD
+
+        ADD_SHOWTIME(s : Showtime)
+            IF HAS_OVERLAP(s.GET_START_TIME(), s.GET_END_TIME()) THEN
+                DISPLAY "Showtime refused: overlaps another showtime on the same screen"
+            ELSE
+                ADD s TO showtimes
+                DISPLAY "Showtime added successfully"
+            END IF
+        END METHOD
+END CLASS
+
+CLASS Showtime
+    ATTRIBUTES
+        film : Film
+        screen : Screen
+        startTime : TEXT
+        endTime : TEXT
+        bookedTickets : LIST<Ticket>
+
+    CONSTRUCTOR(f : Film, sc : Screen, start : TEXT, end : TEXT)
+        SET film TO f
+        SET screen TO sc
+        SET startTime TO start
+        SET endTime TO end
+        SET bookedTickets TO LIST []
+    END CONSTRUCTOR
+
+    METHODS
+        GET_START_TIME()
+            RETURN startTime
+        END METHOD
+
+        GET_END_TIME()
+            RETURN endTime
+        END METHOD
+
+        GET_REMAINING_SEATS()
+            RETURN screen.GET_CAPACITY() - SIZE OF bookedTickets
+        END METHOD
+
+        IS_SEAT_BOOKED(seat : TEXT)
+            REPEAT FROM I = 0 TO SIZE OF bookedTickets -1
+                SET T TO bookedTickets[I]
+
+                IF T.GET_SEAT_NUMBER() EQUALS seat THEN
+                    RETURN TRUE
+                END IF
+            END REPEAT
+
+            RETURN FALSE
+        END METHOD
+
+        BOOK_TICKET(customer : Customer, seat : TEXT)
+            IF GET_REMAINING_SEATS() LESS THAN OR EQUAL TO 0 THEN
+                DISPLAY "Booking refused: screen is full"
+            ELSE
+                IF IS_SEAT_BOOKED(seat) THEN
+                    DISPLAY "Booking refused: seat already booked"
+                ELSE
+                    CREATE OBJECT newTicket OF Ticket(customer.GET_NAME(), seat, THIS)
+                    ADD newTicket TO bookedTickets
+                    DISPLAY "Ticket booked successfully for " + customer.GET_NAME()
+                END IF
+            END IF
+        END METHOD
+END CLASS
+
+CLASS Cinema
+    ATTRIBUTES
+        cinemaName : TEXT
+        screens : LIST<Screen>
+
+    CONSTRUCTOR(name : TEXT)
+        SET cinemaName TO name
+        SET screens TO LIST []
+    END CONSTRUCTOR
+
+    METHODS
+        ADD_SCREEN(s : Screen)
+            ADD s TO screens
+        END METHOD
+END CLASS
+
+START
+BEGIN
+    CREATE OBJECT cinema1 OF Cinema("City Cinema")
+
+    CREATE OBJECT screen1 OF Screen(1, 2, "A1, A2")
+    cinema1.ADD_SCREEN(screen1)
+
+    CREATE OBJECT film1 OF Film("Fast Cars", 120, "Action")
+    CREATE OBJECT film2 OF Film("Night Mystery", 100, "Thriller")
+
+    CREATE OBJECT showtime1 OF Showtime(film1, screen1, "10:00", "12:00")
+    screen1.ADD_SHOWTIME(showtime1)
+
+    CREATE OBJECT showtime2 OF Showtime(film2, screen1, "11:00", "13:00")
+    screen1.ADD_SHOWTIME(showtime2)
+    // Output: Showtime refused because it overlaps showtime1
+
+    CREATE OBJECT customer1 OF Customer("Ahmed", "91234567")
+    CREATE OBJECT customer2 OF Customer("Sara", "92345678")
+    CREATE OBJECT customer3 OF Customer("Ali", "93456789")
+
+    showtime1.BOOK_TICKET(customer1, "A1")
+    // Output: Ticket booked successfully
+
+    showtime1.BOOK_TICKET(customer2, "A1")
+    // Output: Booking refused: seat already booked
+
+    showtime1.BOOK_TICKET(customer2, "A2")
+    // Output: Ticket booked successfully
+
+    DISPLAY showtime1.GET_REMAINING_SEATS()
+    // Output: 0
+
+    showtime1.BOOK_TICKET(customer3, "A3")
+    // Output: Booking refused: screen is full
+END
+STOP
+
+TASK 280
+
+CLASS Category
+    ATTRIBUTES
+        categoryName : TEXT
+        description : TEXT
+
+    CONSTRUCTOR(name : TEXT, desc : TEXT)
+        SET categoryName TO name
+        SET description TO desc
+    END CONSTRUCTOR
+
+    METHODS
+        GET_NAME()
+            RETURN categoryName
+        END METHOD
+END CLASS
+
+CLASS StockMovement
+    ATTRIBUTES
+        movementType : TEXT
+        quantity : NUMBER
+        movementDate : TEXT
+
+    CONSTRUCTOR(type : TEXT, qty : NUMBER, date : TEXT)
+        SET movementType TO type
+        SET quantity TO qty
+        SET movementDate TO date
+    END CONSTRUCTOR
+
+    METHODS
+        GET_TYPE()
+            RETURN movementType
+        END METHOD
+
+        GET_QUANTITY()
+            RETURN quantity
+        END METHOD
+END CLASS
+
+CLASS StorageBin
+    ATTRIBUTES
+        binCode : TEXT
+        quantity : NUMBER
+
+    CONSTRUCTOR(code : TEXT, qty : NUMBER)
+        SET binCode TO code
+        SET quantity TO qty
+    END CONSTRUCTOR
+
+    METHODS
+        GET_QUANTITY()
+            RETURN quantity
+        END METHOD
+
+        ADD_STOCK(qty : NUMBER)
+            SET quantity TO quantity + qty
+        END METHOD
+
+        REMOVE_STOCK(qty : NUMBER)
+            IF qty GREATER THAN quantity THEN
+                DISPLAY "Movement refused: not enough stock in this bin"
+            ELSE
+                SET quantity TO quantity - qty
+				DISPLAY "Movement successfully"
+            END IF
+        END METHOD
+END CLASS
+
+CLASS Vendor
+    ATTRIBUTES
+        vendorName : TEXT
+        contactDetails : TEXT
+        totalDeliveries : NUMBER
+        lateDeliveries : NUMBER
+        products : LIST<Product>
+
+    CONSTRUCTOR(name : TEXT, contact : TEXT)
+        SET vendorName TO name
+        SET contactDetails TO contact
+        SET totalDeliveries TO 0
+        SET lateDeliveries TO 0
+        SET products TO LIST []
+    END CONSTRUCTOR
+
+    METHODS
+        ADD_PRODUCT(p : Product)
+            ADD p TO products
+        END METHOD
+
+        RECORD_DELIVERY(isLate : BOOLEAN)
+            SET totalDeliveries TO totalDeliveries + 1
+
+            IF isLate THEN
+                SET lateDeliveries TO lateDeliveries + 1
+            END IF
+        END METHOD
+
+        GET_RELIABILITY_RATING()
+            IF totalDeliveries EQUALS 0 THEN
+                RETURN 100
+            ELSE
+                RETURN 100 - ((lateDeliveries / totalDeliveries) * 100)
+            END IF
+        END METHOD
+
+        GET_NAME()
+            RETURN vendorName
+        END METHOD
+END CLASS
+
+CLASS Product
+    ATTRIBUTES
+        productName : TEXT
+        category : Category
+        vendor : Vendor
+        bins : LIST<StorageBin>
+        movements : LIST<StockMovement>
+
+    CONSTRUCTOR(name : TEXT, cat : Category, v : Vendor)
+        SET productName TO name
+        SET category TO cat
+        SET vendor TO v
+        SET bins TO LIST []
+        SET movements TO LIST []
+    END CONSTRUCTOR
+
+    METHODS
+        ADD_BIN(bin : StorageBin)
+            ADD bin TO bins
+        END METHOD
+
+        GET_TOTAL_STOCK()
+            SET total TO 0
+
+            REPEAT FROM I = 1 TO SIZE OF bins
+                SET B TO bins[I]
+                SET total TO total + B.GET_QUANTITY()
+            END REPEAT
+
+            RETURN total
+        END METHOD
+
+        MOVE_STOCK_IN(qty : NUMBER, date : TEXT)
+            IF SIZE OF bins EQUALS 0 THEN
+                DISPLAY "Movement refused: no storage bin available"
+            ELSE
+                SET B TO bins[1]
+                B.ADD_STOCK(qty)
+
+                CREATE OBJECT movement OF StockMovement("IN", qty, date)
+                ADD movement TO movements
+
+                DISPLAY "Stock added successfully"
+            END IF
+        END METHOD
+
+        MOVE_STOCK_OUT(qty : NUMBER, date : TEXT)
+            IF qty GREATER THAN GET_TOTAL_STOCK() THEN
+                DISPLAY "Movement refused: stock cannot go below zero"
+            ELSE
+                SET remainingQty TO qty
+
+                REPEAT FROM I = 1 TO SIZE OF bins
+                    SET B TO bins[I]
+
+                    IF remainingQty GREATER THAN 0 THEN
+                        IF B.GET_QUANTITY() GREATER THAN OR EQUAL TO remainingQty THEN
+                            B.REMOVE_STOCK(remainingQty)
+                            SET remainingQty TO 0
+                        ELSE
+                            SET taken TO B.GET_QUANTITY()
+                            B.REMOVE_STOCK(taken)
+                            SET remainingQty TO remainingQty - taken
+                        END IF
+                    END IF
+                END REPEAT
+
+                CREATE OBJECT movement OF StockMovement("OUT", qty, date)
+                ADD movement TO movements
+
+                DISPLAY "Stock removed successfully"
+            END IF
+        END METHOD
+
+        GET_NAME()
+            RETURN productName
+        END METHOD
+END CLASS
+
+CLASS Warehouse
+    ATTRIBUTES
+        warehouseName : TEXT
+        products : LIST<Product>
+
+    CONSTRUCTOR(name : TEXT)
+        SET warehouseName TO name
+        SET products TO LIST []
+    END CONSTRUCTOR
+
+    METHODS
+        ADD_PRODUCT(p : Product)
+            ADD p TO products
+        END METHOD
+END CLASS
+
+START
+BEGIN
+    CREATE OBJECT warehouse1 OF Warehouse("Main Warehouse")
+
+    CREATE OBJECT electronics OF Category("Electronics", "Devices and accessories")
+
+    CREATE OBJECT vendor1 OF Vendor("Oman Supplies", "91234567")
+
+    CREATE OBJECT product1 OF Product("Laptop", electronics, vendor1)
+
+    vendor1.ADD_PRODUCT(product1)
+    warehouse1.ADD_PRODUCT(product1)
+
+    CREATE OBJECT bin1 OF StorageBin("A1", 10)
+    CREATE OBJECT bin2 OF StorageBin("A2", 5)
+
+    product1.ADD_BIN(bin1)
+    product1.ADD_BIN(bin2)
+
+    DISPLAY product1.GET_TOTAL_STOCK()
+    // Output: 15
+
+    product1.MOVE_STOCK_IN(5, "2026-07-08")
+    // Output: Stock added successfully
+
+    DISPLAY product1.GET_TOTAL_STOCK()
+    // Output: 20
+
+    product1.MOVE_STOCK_OUT(8, "2026-07-08")
+    // Output: Stock removed successfully
+
+    DISPLAY product1.GET_TOTAL_STOCK()
+    // Output: 12
+
+    product1.MOVE_STOCK_OUT(20, "2026-07-08")
+    // Output: Movement refused: stock cannot go below zero
+
+    vendor1.RECORD_DELIVERY(FALSE)
+    vendor1.RECORD_DELIVERY(TRUE)
+    vendor1.RECORD_DELIVERY(FALSE)
+
+    DISPLAY vendor1.GET_RELIABILITY_RATING()
+    // Output: 66.67
+END
+STOP
+
+
+TASK 281
+
+CLASS Subject
+    ATTRIBUTES
+        subjectName : TEXT
+        syllabus : TEXT
+
+    CONSTRUCTOR(name : TEXT, syl : TEXT)
+        SET subjectName TO name
+        SET syllabus TO syl
+    END CONSTRUCTOR
+
+    METHODS
+        GET_NAME()
+            RETURN subjectName
+        END METHOD
+
+        GET_SYLLABUS()
+            RETURN syllabus
+        END METHOD
+END CLASS
+
+CLASS Grade
+    ATTRIBUTES
+        assessmentName : TEXT
+        mark : NUMBER
+        weighting : NUMBER
+
+    CONSTRUCTOR(assessment : TEXT, m : NUMBER, w : NUMBER)
+        SET assessmentName TO assessment
+        SET mark TO m
+        SET weighting TO w
+    END CONSTRUCTOR
+
+    METHODS
+        GET_MARK()
+            RETURN mark
+        END METHOD
+
+        GET_WEIGHTING()
+            RETURN weighting
+        END METHOD
+
+        GET_WEIGHTED_MARK()
+            RETURN mark * weighting
+        END METHOD
+END CLASS
+
+CLASS Student
+    ATTRIBUTES
+        studentName : TEXT
+        studentID : TEXT
+        personalRecord : TEXT
+        grades : LIST<Grade>
+        enrolledClasses : LIST<SchoolClass>
+
+    CONSTRUCTOR(name : TEXT, id : TEXT, record : TEXT)
+        SET studentName TO name
+        SET studentID TO id
+        SET personalRecord TO record
+        SET grades TO LIST []
+        SET enrolledClasses TO LIST []
+    END CONSTRUCTOR
+
+    METHODS
+        GET_NAME()
+            RETURN studentName
+        END METHOD
+
+        ADD_GRADE(g : Grade)
+            ADD g TO grades
+        END METHOD
+
+        GET_OVERALL_AVERAGE()
+            SET totalWeightedMarks TO 0
+            SET totalWeighting TO 0
+
+            REPEAT FROM I = 1 TO SIZE OF grades
+                SET G TO grades[I]
+                SET totalWeightedMarks TO totalWeightedMarks + G.GET_WEIGHTED_MARK()
+                SET totalWeighting TO totalWeighting + G.GET_WEIGHTING()
+            END REPEAT
+
+            IF totalWeighting EQUALS 0 THEN
+                RETURN 0
+            ELSE
+                RETURN totalWeightedMarks / totalWeighting
+            END IF
+        END METHOD
+
+        HAS_TIME_CONFLICT(time : TEXT)
+            REPEAT FROM I = 1 TO SIZE OF enrolledClasses
+                SET C TO enrolledClasses[I]
+
+                IF C.GET_SCHEDULED_TIME() EQUALS time THEN
+                    RETURN TRUE
+                END IF
+            END REPEAT
+
+            RETURN FALSE
+        END METHOD
+
+        ADD_CLASS(c : SchoolClass)
+            ADD c TO enrolledClasses
+        END METHOD
+END CLASS
+
+CLASS Teacher
+    ATTRIBUTES
+        teacherName : TEXT
+        teacherID : TEXT
+        classes : LIST<SchoolClass>
+
+    CONSTRUCTOR(name : TEXT, id : TEXT)
+        SET teacherName TO name
+        SET teacherID TO id
+        SET classes TO LIST []
+    END CONSTRUCTOR
+
+    METHODS
+        GET_NAME()
+            RETURN teacherName
+        END METHOD
+
+        ADD_CLASS(c : SchoolClass)
+            ADD c TO classes
+        END METHOD
+
+        RECORD_GRADE(student : Student, assessment : TEXT, mark : NUMBER, weighting : NUMBER)
+            CREATE OBJECT newGrade OF Grade(assessment, mark, weighting)
+            student.ADD_GRADE(newGrade)
+            DISPLAY "Grade recorded for " + student.GET_NAME()
+        END METHOD
+END CLASS
+
+CLASS SchoolClass
+    ATTRIBUTES
+        className : TEXT
+        subject : Subject
+        teacher : Teacher
+        scheduledTime : TEXT
+        maxClassSize : NUMBER
+        roster : LIST<Student>
+
+    CONSTRUCTOR(name : TEXT, sub : Subject, t : Teacher, time : TEXT, maxSize : NUMBER)
+        SET className TO name
+        SET subject TO sub
+        SET teacher TO t
+        SET scheduledTime TO time
+        SET maxClassSize TO maxSize
+        SET roster TO LIST []
+    END CONSTRUCTOR
+
+    METHODS
+        GET_SCHEDULED_TIME()
+            RETURN scheduledTime
+        END METHOD
+
+        GET_CLASS_SIZE()
+            RETURN SIZE OF roster
+        END METHOD
+
+        ENROLL_STUDENT(student : Student)
+            IF GET_CLASS_SIZE() GREATER THAN OR EQUAL TO maxClassSize THEN
+                DISPLAY "Enrollment refused: class is full"
+            ELSE
+                IF student.HAS_TIME_CONFLICT(scheduledTime) THEN
+                    DISPLAY "Enrollment refused: student already has a class at this time"
+                ELSE
+                    ADD student TO roster
+                    student.ADD_CLASS(THIS)
+                    DISPLAY student.GET_NAME() + " enrolled successfully"
+                END IF
+            END IF
+        END METHOD
+END CLASS
+
+CLASS School
+    ATTRIBUTES
+        schoolName : TEXT
+        classes : LIST<SchoolClass>
+
+    CONSTRUCTOR(name : TEXT)
+        SET schoolName TO name
+        SET classes TO LIST []
+    END CONSTRUCTOR
+
+    METHODS
+        ADD_CLASS(c : SchoolClass)
+            ADD c TO classes
+        END METHOD
+END CLASS
+
+START
+BEGIN
+    CREATE OBJECT school1 OF School("Modern School")
+
+    CREATE OBJECT mathSubject OF Subject("Mathematics", "Algebra, Geometry, Statistics")
+    CREATE OBJECT scienceSubject OF Subject("Science", "Biology, Chemistry, Physics")
+
+    CREATE OBJECT teacher1 OF Teacher("Mr. Ahmed", "T001")
+    CREATE OBJECT teacher2 OF Teacher("Ms. Sara", "T002")
+
+    CREATE OBJECT class1 OF SchoolClass("Math Class A", mathSubject, teacher1, "08:00", 2)
+    CREATE OBJECT class2 OF SchoolClass("Science Class A", scienceSubject, teacher2, "08:00", 2)
+
+    school1.ADD_CLASS(class1)
+    school1.ADD_CLASS(class2)
+
+    teacher1.ADD_CLASS(class1)
+    teacher2.ADD_CLASS(class2)
+
+    CREATE OBJECT student1 OF Student("Ali", "S001", "Good attendance")
+    CREATE OBJECT student2 OF Student("Muna", "S002", "Excellent behavior")
+    CREATE OBJECT student3 OF Student("Omar", "S003", "Needs support in homework")
+
+    class1.ENROLL_STUDENT(student1)
+    // Output: Ali enrolled successfully
+
+    class1.ENROLL_STUDENT(student2)
+    // Output: Muna enrolled successfully
+
+    class1.ENROLL_STUDENT(student3)
+    // Output: Enrollment refused: class is full
+
+    class2.ENROLL_STUDENT(student1)
+    // Output: Enrollment refused: student already has a class at this time
+
+    teacher1.RECORD_GRADE(student1, "Quiz 1", 80, 0.30)
+    teacher1.RECORD_GRADE(student1, "Midterm Exam", 90, 0.70)
+
+    DISPLAY student1.GET_OVERALL_AVERAGE()
+    // Output: 87
+
+END
+STOP
+
+
+TASK 282
+
+CLASS Policyholder
+    ATTRIBUTES
+        holderName : TEXT
+        phoneNumber : TEXT
+        policies : LIST<Policy>
+
+    CONSTRUCTOR(name : TEXT, phone : TEXT)
+        SET holderName TO name
+        SET phoneNumber TO phone
+        SET policies TO LIST []
+    END CONSTRUCTOR
+
+    METHODS
+        GET_NAME()
+            RETURN holderName
+        END METHOD
+
+        ADD_POLICY(p : Policy)
+            ADD p TO policies
+        END METHOD
+END CLASS
+
+CLASS Coverage
+    ATTRIBUTES
+        coverageType : TEXT
+        coverageLimit : NUMBER
+
+    CONSTRUCTOR(type : TEXT, limit : NUMBER)
+        SET coverageType TO type
+        SET coverageLimit TO limit
+    END CONSTRUCTOR
+
+    METHODS
+        GET_TYPE()
+            RETURN coverageType
+        END METHOD
+
+        GET_LIMIT()
+            RETURN coverageLimit
+        END METHOD
+END CLASS
+
+CLASS Claim
+    ATTRIBUTES
+        claimDetails : TEXT
+        coverageType : TEXT
+        claimAmount : NUMBER
+        status : TEXT
+
+    CONSTRUCTOR(details : TEXT, type : TEXT, amount : NUMBER)
+        SET claimDetails TO details
+        SET coverageType TO type
+        SET claimAmount TO amount
+        SET status TO "Filed"
+    END CONSTRUCTOR
+
+    METHODS
+        GET_AMOUNT()
+            RETURN claimAmount
+        END METHOD
+
+        GET_COVERAGE_TYPE()
+            RETURN coverageType
+        END METHOD
+
+        GET_STATUS()
+            RETURN status
+        END METHOD
+
+        MOVE_TO_REVIEW()
+            IF status EQUALS "Filed" THEN
+                SET status TO "Under Review"
+            ELSE
+                DISPLAY "Invalid status change"
+            END IF
+        END METHOD
+
+        APPROVE()
+            IF status EQUALS "Under Review" THEN
+                SET status TO "Approved"
+            ELSE
+                DISPLAY "Claim must be under review before approval"
+            END IF
+        END METHOD
+
+        REJECT()
+            IF status EQUALS "Under Review" THEN
+                SET status TO "Rejected"
+            ELSE
+                DISPLAY "Claim must be under review before rejection"
+            END IF
+        END METHOD
+
+        IS_APPROVED()
+            IF status EQUALS "Approved" THEN
+                RETURN TRUE
+            ELSE
+                RETURN FALSE
+            END IF
+        END METHOD
+END CLASS
+
+CLASS Policy
+    ATTRIBUTES
+        policyNumber : TEXT
+        policyholder : Policyholder
+        coverages : LIST<Coverage>
+        claims : LIST<Claim>
+
+    CONSTRUCTOR(number : TEXT, holder : Policyholder)
+        SET policyNumber TO number
+        SET policyholder TO holder
+        SET coverages TO LIST []
+        SET claims TO LIST []
+    END CONSTRUCTOR
+
+    METHODS
+        ADD_COVERAGE(c : Coverage)
+            ADD c TO coverages
+        END METHOD
+
+        FIND_COVERAGE_LIMIT(type : TEXT)
+            REPEAT FROM I = 1 TO SIZE OF coverages
+                SET C TO coverages[I]
+
+                IF C.GET_TYPE() EQUALS type THEN
+                    RETURN C.GET_LIMIT()
+                END IF
+            END REPEAT
+
+            RETURN 0
+        END METHOD
+
+        FILE_CLAIM(details : TEXT, type : TEXT, amount : NUMBER)
+            SET limit TO FIND_COVERAGE_LIMIT(type)
+
+            IF limit EQUALS 0 THEN
+                DISPLAY "Claim refused: coverage type not found"
+            ELSE
+                IF amount GREATER THAN limit THEN
+                    DISPLAY "Claim refused: amount exceeds coverage limit"
+                ELSE
+                    CREATE OBJECT newClaim OF Claim(details, type, amount)
+                    ADD newClaim TO claims
+                    DISPLAY "Claim filed successfully"
+                END IF
+            END IF
+        END METHOD
+
+        GET_TOTAL_COVERAGE_LIMIT()
+            SET total TO 0
+
+            REPEAT FROM I = 1 TO SIZE OF coverages
+                SET C TO coverages[I]
+                SET total TO total + C.GET_LIMIT()
+            END REPEAT
+
+            RETURN total
+        END METHOD
+
+        GET_TOTAL_APPROVED_CLAIMS()
+            SET total TO 0
+
+            REPEAT FROM I = 1 TO SIZE OF claims
+                SET CL TO claims[I]
+
+                IF CL.IS_APPROVED() THEN
+                    SET total TO total + CL.GET_AMOUNT()
+                END IF
+            END REPEAT
+
+            RETURN total
+        END METHOD
+
+        GET_TOTAL_REMAINING_COVERAGE()
+            RETURN GET_TOTAL_COVERAGE_LIMIT() - GET_TOTAL_APPROVED_CLAIMS()
+        END METHOD
+END CLASS
+
+CLASS InsuranceCompany
+    ATTRIBUTES
+        companyName : TEXT
+        policies : LIST<Policy>
+
+    CONSTRUCTOR(name : TEXT)
+        SET companyName TO name
+        SET policies TO LIST []
+    END CONSTRUCTOR
+
+    METHODS
+        ADD_POLICY(p : Policy)
+            ADD p TO policies
+        END METHOD
+END CLASS
+
+START
+BEGIN
+    CREATE OBJECT company1 OF InsuranceCompany("Safe Life Insurance")
+
+    CREATE OBJECT holder1 OF Policyholder("Ahmed", "91234567")
+
+    CREATE OBJECT policy1 OF Policy("POL1001", holder1)
+
+    holder1.ADD_POLICY(policy1)
+    company1.ADD_POLICY(policy1)
+
+    CREATE OBJECT healthCoverage OF Coverage("Health", 1000)
+    CREATE OBJECT carCoverage OF Coverage("Car", 2000)
+
+    policy1.ADD_COVERAGE(healthCoverage)
+    policy1.ADD_COVERAGE(carCoverage)
+
+    policy1.FILE_CLAIM("Hospital treatment", "Health", 500)
+    // Output: Claim filed successfully
+
+    policy1.FILE_CLAIM("Car accident repair", "Car", 2500)
+    // Output: Claim refused: amount exceeds coverage limit
+
+    CREATE OBJECT claim1 OF Claim("Emergency surgery", "Health", 300)
+
+    claim1.MOVE_TO_REVIEW()
+    claim1.APPROVE()
+
+    DISPLAY claim1.GET_STATUS()
+    // Output: Approved
+
+    DISPLAY policy1.GET_TOTAL_COVERAGE_LIMIT()
+    // Output: 3000
+
+    DISPLAY policy1.GET_TOTAL_APPROVED_CLAIMS()
+    // Output: 0
+
+    DISPLAY policy1.GET_TOTAL_REMAINING_COVERAGE()
+    // Output: 3000
+
+END
+STOP
+
+
+TASK 283
+
+CLASS CarModel
+    ATTRIBUTES
+        modelName : TEXT
+        brandName : TEXT
+        basePrice : NUMBER
+
+    CONSTRUCTOR(model : TEXT, brand : TEXT, price : NUMBER)
+        SET modelName TO model
+        SET brandName TO brand
+        SET basePrice TO price
+    END CONSTRUCTOR
+
+    METHODS
+        GET_BASE_PRICE()
+            RETURN basePrice
+        END METHOD
+
+        GET_MODEL_NAME()
+            RETURN modelName
+        END METHOD
+END CLASS
+
+CLASS AddOnFeature
+    ATTRIBUTES
+        featureName : TEXT
+        cost : NUMBER
+
+    CONSTRUCTOR(name : TEXT, c : NUMBER)
+        SET featureName TO name
+        SET cost TO c
+    END CONSTRUCTOR
+
+    METHODS
+        GET_COST()
+            RETURN cost
+        END METHOD
+
+        GET_NAME()
+            RETURN featureName
+        END METHOD
+END CLASS
+
+CLASS Customer
+    ATTRIBUTES
+        customerName : TEXT
+        phoneNumber : TEXT
+        sales : LIST<Sale>
+
+    CONSTRUCTOR(name : TEXT, phone : TEXT)
+        SET customerName TO name
+        SET phoneNumber TO phone
+        SET sales TO LIST []
+    END CONSTRUCTOR
+
+    METHODS
+        GET_NAME()
+            RETURN customerName
+        END METHOD
+
+        ADD_SALE(s : Sale)
+            ADD s TO sales
+        END METHOD
+END CLASS
+
+CLASS Vehicle
+    ATTRIBUTES
+        vinNumber : TEXT
+        color : TEXT
+        year : NUMBER
+        model : CarModel
+        listedPrice : NUMBER
+        isAvailable : BOOLEAN
+
+    CONSTRUCTOR(vin : TEXT, c : TEXT, y : NUMBER, m : CarModel, price : NUMBER)
+        SET vinNumber TO vin
+        SET color TO c
+        SET year TO y
+        SET model TO m
+
+        IF price LESS THAN model.GET_BASE_PRICE() THEN
+            SET listedPrice TO model.GET_BASE_PRICE()
+        ELSE
+            SET listedPrice TO price
+        END IF
+
+        SET isAvailable TO TRUE
+    END CONSTRUCTOR
+
+    METHODS
+        GET_LISTED_PRICE()
+            RETURN listedPrice
+        END METHOD
+
+        IS_AVAILABLE()
+            RETURN isAvailable
+        END METHOD
+
+        MARK_AS_SOLD()
+            IF isAvailable THEN
+                SET isAvailable TO FALSE
+            ELSE
+                DISPLAY "Vehicle is already sold"
+            END IF
+        END METHOD
+
+        SET_LISTED_PRICE(newPrice : NUMBER)
+            IF newPrice LESS THAN model.GET_BASE_PRICE() THEN
+                DISPLAY "Price update refused: listed price cannot be below model base price"
+            ELSE
+                SET listedPrice TO newPrice
+            END IF
+        END METHOD
+END CLASS
+
+CLASS Sale
+    ATTRIBUTES
+        customer : Customer
+        vehicle : Vehicle
+        agreedPrice : NUMBER
+        addOns : LIST<AddOnFeature>
+        saleDate : TEXT
+
+    CONSTRUCTOR(c : Customer, v : Vehicle, price : NUMBER, date : TEXT)
+        SET customer TO c
+        SET vehicle TO v
+        SET saleDate TO date
+        SET addOns TO LIST []
+
+        IF vehicle.IS_AVAILABLE() THEN
+            SET agreedPrice TO price
+            vehicle.MARK_AS_SOLD()
+            customer.ADD_SALE(THIS)
+            DISPLAY "Sale created successfully"
+        ELSE
+            DISPLAY "Sale refused: vehicle already sold"
+        END IF
+    END CONSTRUCTOR
+
+    METHODS
+        ADD_FEATURE(f : AddOnFeature)
+            ADD f TO addOns
+        END METHOD
+
+        GET_ADD_ON_TOTAL()
+            SET total TO 0
+
+            REPEAT FROM I = 1 TO SIZE OF addOns
+                SET A TO addOns[I]
+                SET total TO total + A.GET_COST()
+            END REPEAT
+
+            RETURN total
+        END METHOD
+
+        GET_FINAL_TOTAL_PRICE()
+            RETURN agreedPrice + GET_ADD_ON_TOTAL()
+        END METHOD
+END CLASS
+
+CLASS Dealership
+    ATTRIBUTES
+        dealershipName : TEXT
+        vehicles : LIST<Vehicle>
+        sales : LIST<Sale>
+
+    CONSTRUCTOR(name : TEXT)
+        SET dealershipName TO name
+        SET vehicles TO LIST []
+        SET sales TO LIST []
+    END CONSTRUCTOR
+
+    METHODS
+        ADD_VEHICLE(v : Vehicle)
+            ADD v TO vehicles
+        END METHOD
+
+        ADD_SALE(s : Sale)
+            ADD s TO sales
+        END METHOD
+END CLASS
+
+START
+BEGIN
+    CREATE OBJECT dealership1 OF Dealership("Muscat Motors")
+
+    CREATE OBJECT model1 OF CarModel("Camry XLE", "Toyota", 9000)
+
+    CREATE OBJECT vehicle1 OF Vehicle("VIN1001", "White", 2024, model1, 9500)
+    CREATE OBJECT vehicle2 OF Vehicle("VIN1002", "Black", 2024, model1, 8500)
+
+    dealership1.ADD_VEHICLE(vehicle1)
+    dealership1.ADD_VEHICLE(vehicle2)
+
+    DISPLAY vehicle1.GET_LISTED_PRICE()
+    // Output: 9500
+
+    DISPLAY vehicle2.GET_LISTED_PRICE()
+    // Output: 9000 because listed price cannot be below base price
+
+    vehicle1.SET_LISTED_PRICE(8800)
+    // Output: Price update refused: listed price cannot be below model base price
+
+    CREATE OBJECT customer1 OF Customer("Ahmed", "91234567")
+
+    CREATE OBJECT sale1 OF Sale(customer1, vehicle1, 9400, "2026-07-09")
+    dealership1.ADD_SALE(sale1)
+    // Output: Sale created successfully
+
+    CREATE OBJECT tint OF AddOnFeature("Window Tint", 120)
+    CREATE OBJECT warranty OF AddOnFeature("Extended Warranty", 300)
+
+    sale1.ADD_FEATURE(tint)
+    sale1.ADD_FEATURE(warranty)
+
+    DISPLAY sale1.GET_ADD_ON_TOTAL()
+    // Output: 420
+
+    DISPLAY sale1.GET_FINAL_TOTAL_PRICE()
+    // Output: 9820
+
+    CREATE OBJECT customer2 OF Customer("Sara", "92345678")
+
+    CREATE OBJECT sale2 OF Sale(customer2, vehicle1, 9300, "2026-07-10")
+    // Output: Sale refused: vehicle already sold
+END
+STOP
+
+TASK 284
+
+CLASS Couple
+    ATTRIBUTES
+        coupleName : TEXT
+        phoneNumber : TEXT
+        events : LIST<WeddingEvent>
+
+    CONSTRUCTOR(name : TEXT, phone : TEXT)
+        SET coupleName TO name
+        SET phoneNumber TO phone
+        SET events TO LIST []
+    END CONSTRUCTOR
+
+    METHODS
+        GET_NAME()
+            RETURN coupleName
+        END METHOD
+
+        ADD_EVENT(e : WeddingEvent)
+            ADD e TO events
+        END METHOD
+END CLASS
+
+CLASS Guest
+    ATTRIBUTES
+        guestName : TEXT
+        phoneNumber : TEXT
+        invitationStatus : TEXT
+
+    CONSTRUCTOR(name : TEXT, phone : TEXT)
+        SET guestName TO name
+        SET phoneNumber TO phone
+        SET invitationStatus TO "Invited"
+    END CONSTRUCTOR
+
+    METHODS
+        GET_NAME()
+            RETURN guestName
+        END METHOD
+
+        SET_INVITATION_STATUS(status : TEXT)
+            SET invitationStatus TO status
+        END METHOD
+END CLASS
+
+CLASS Vendor
+    ATTRIBUTES
+        vendorName : TEXT
+        contactDetails : TEXT
+        specialty : TEXT
+        bookedDates : LIST<TEXT>
+
+    CONSTRUCTOR(name : TEXT, contact : TEXT, spec : TEXT)
+        SET vendorName TO name
+        SET contactDetails TO contact
+        SET specialty TO spec
+        SET bookedDates TO LIST []
+    END CONSTRUCTOR
+
+    METHODS
+        GET_NAME()
+            RETURN vendorName
+        END METHOD
+
+        IS_AVAILABLE(date : TEXT)
+            REPEAT FROM I = 1 TO SIZE OF bookedDates
+                SET D TO bookedDates[I]
+
+                IF D EQUALS date THEN
+                    RETURN FALSE
+                END IF
+            END REPEAT
+
+            RETURN TRUE
+        END METHOD
+
+        BOOK_DATE(date : TEXT)
+            IF IS_AVAILABLE(date) THEN
+                ADD date TO bookedDates
+                DISPLAY "Vendor booked successfully"
+            ELSE
+                DISPLAY "Vendor refused: already booked on this date"
+            END IF
+        END METHOD
+END CLASS
+
+CLASS PlanningTask
+    ATTRIBUTES
+        taskName : TEXT
+        cost : NUMBER
+        isDone : BOOLEAN
+        vendor : Vendor
+
+    CONSTRUCTOR(name : TEXT, c : NUMBER, v : Vendor)
+        SET taskName TO name
+        SET cost TO c
+        SET vendor TO v
+        SET isDone TO FALSE
+    END CONSTRUCTOR
+
+    METHODS
+        GET_COST()
+            RETURN cost
+        END METHOD
+
+        GET_VENDOR()
+            RETURN vendor
+        END METHOD
+
+        MARK_DONE()
+            SET isDone TO TRUE
+        END METHOD
+
+        IS_DONE()
+            RETURN isDone
+        END METHOD
+END CLASS
+
+CLASS WeddingEvent
+    ATTRIBUTES
+        eventName : TEXT
+        eventDate : TEXT
+        couple : Couple
+        budget : NUMBER
+        tasks : LIST<PlanningTask>
+        guests : LIST<Guest>
+
+    CONSTRUCTOR(name : TEXT, date : TEXT, c : Couple, b : NUMBER)
+        SET eventName TO name
+        SET eventDate TO date
+        SET couple TO c
+        SET budget TO b
+        SET tasks TO LIST []
+        SET guests TO LIST []
+    END CONSTRUCTOR
+
+    METHODS
+        ADD_GUEST(g : Guest)
+            ADD g TO guests
+        END METHOD
+
+        GET_TOTAL_SPENDING()
+            SET total TO 0
+
+            REPEAT FROM I = 1 TO SIZE OF tasks
+                SET T TO tasks[I]
+                SET total TO total + T.GET_COST()
+            END REPEAT
+
+            RETURN total
+        END METHOD
+
+        ADD_TASK(t : PlanningTask)
+            IF GET_TOTAL_SPENDING() + t.GET_COST() GREATER THAN budget THEN
+                DISPLAY "Task refused: cost exceeds event budget"
+            ELSE
+                IF NOT t.GET_VENDOR().IS_AVAILABLE(eventDate) THEN
+                    DISPLAY "Task refused: vendor already booked on this date"
+                ELSE
+                    ADD t TO tasks
+                    t.GET_VENDOR().BOOK_DATE(eventDate)
+                    DISPLAY "Task added successfully"
+                END IF
+            END IF
+        END METHOD
+
+        GET_COMPLETION_PERCENTAGE()
+            IF SIZE OF tasks EQUALS 0 THEN
+                RETURN 0
+            ELSE
+                SET doneCount TO 0
+
+                REPEAT FROM I = 1 TO SIZE OF tasks
+                    SET T TO tasks[I]
+
+                    IF T.IS_DONE() THEN
+                        SET doneCount TO doneCount + 1
+                    END IF
+                END REPEAT
+
+                RETURN (doneCount / SIZE OF tasks) * 100
+            END IF
+        END METHOD
+END CLASS
+
+CLASS WeddingPlanningCompany
+    ATTRIBUTES
+        companyName : TEXT
+        events : LIST<WeddingEvent>
+
+    CONSTRUCTOR(name : TEXT)
+        SET companyName TO name
+        SET events TO LIST []
+    END CONSTRUCTOR
+
+    METHODS
+        ADD_EVENT(e : WeddingEvent)
+            ADD e TO events
+        END METHOD
+END CLASS
+
+START
+BEGIN
+    CREATE OBJECT company1 OF WeddingPlanningCompany("Dream Weddings")
+
+    CREATE OBJECT couple1 OF Couple("Ahmed and Sara", "91234567")
+
+    CREATE OBJECT event1 OF WeddingEvent("Ahmed and Sara Wedding", "2026-08-20", couple1, 5000)
+
+    couple1.ADD_EVENT(event1)
+    company1.ADD_EVENT(event1)
+
+    CREATE OBJECT guest1 OF Guest("Ali", "92345678")
+    CREATE OBJECT guest2 OF Guest("Muna", "93456789")
+
+    event1.ADD_GUEST(guest1)
+    event1.ADD_GUEST(guest2)
+
+    CREATE OBJECT vendor1 OF Vendor("Luxury Flowers", "94567890", "Flowers")
+    CREATE OBJECT vendor2 OF Vendor("Royal Catering", "95678901", "Catering")
+
+    CREATE OBJECT task1 OF PlanningTask("Flower Decoration", 1000, vendor1)
+    CREATE OBJECT task2 OF PlanningTask("Dinner Catering", 3000, vendor2)
+    CREATE OBJECT task3 OF PlanningTask("Luxury Stage", 2000, vendor1)
+
+    event1.ADD_TASK(task1)
+    // Output: Task added successfully
+
+    event1.ADD_TASK(task2)
+    // Output: Task added successfully
+
+    event1.ADD_TASK(task3)
+    // Output: Task refused: cost exceeds event budget
+
+    task1.MARK_DONE()
+
+    DISPLAY event1.GET_TOTAL_SPENDING()
+    // Output: 4000
+
+    DISPLAY event1.GET_COMPLETION_PERCENTAGE()
+    // Output: 50
+
+    CREATE OBJECT couple2 OF Couple("Omar and Noor", "96789012")
+    CREATE OBJECT event2 OF WeddingEvent("Omar and Noor Wedding", "2026-08-20", couple2, 4000)
+
+    CREATE OBJECT task4 OF PlanningTask("Second Flower Decoration", 1000, vendor1)
+
+    event2.ADD_TASK(task4)
+    // Output: Task refused: vendor already booked on this date
+END
+STOP
+
+
+
+TASK 285
+
+CLASS Artist
+    ATTRIBUTES
+        artistName : TEXT
+        genre : TEXT
+        concerts : LIST<Concert>
+
+    CONSTRUCTOR(name : TEXT, g : TEXT)
+        SET artistName TO name
+        SET genre TO g
+        SET concerts TO LIST []
+    END CONSTRUCTOR
+
+    METHODS
+        GET_NAME()
+            RETURN artistName
+        END METHOD
+
+        ADD_CONCERT(c : Concert)
+            ADD c TO concerts
+        END METHOD
+END CLASS
+
+CLASS PriceTier
+    ATTRIBUTES
+        tierName : TEXT
+        price : NUMBER
+        ticketLimit : NUMBER
+
+    CONSTRUCTOR(name : TEXT, p : NUMBER, limit : NUMBER)
+        SET tierName TO name
+        SET price TO p
+        SET ticketLimit TO limit
+    END CONSTRUCTOR
+
+    METHODS
+        GET_NAME()
+            RETURN tierName
+        END METHOD
+
+        GET_PRICE()
+            RETURN price
+        END METHOD
+
+        GET_LIMIT()
+            RETURN ticketLimit
+        END METHOD
+END CLASS
+
+CLASS Ticket
+    ATTRIBUTES
+        fanName : TEXT
+        seatNumber : TEXT
+        concert : Concert
+        tier : PriceTier
+
+    CONSTRUCTOR(fan : TEXT, seat : TEXT, c : Concert, t : PriceTier)
+        SET fanName TO fan
+        SET seatNumber TO seat
+        SET concert TO c
+        SET tier TO t
+    END CONSTRUCTOR
+
+    METHODS
+        GET_SEAT_NUMBER()
+            RETURN seatNumber
+        END METHOD
+
+        GET_TIER()
+            RETURN tier
+        END METHOD
+
+        GET_PRICE()
+            RETURN tier.GET_PRICE()
+        END METHOD
+END CLASS
+
+CLASS Venue
+    ATTRIBUTES
+        venueName : TEXT
+        seatingChart : TEXT
+        concerts : LIST<Concert>
+
+    CONSTRUCTOR(name : TEXT, chart : TEXT)
+        SET venueName TO name
+        SET seatingChart TO chart
+        SET concerts TO LIST []
+    END CONSTRUCTOR
+
+    METHODS
+        GET_NAME()
+            RETURN venueName
+        END METHOD
+
+        HAS_DATE_CLASH(date : TEXT)
+            REPEAT FROM I = 1 TO SIZE OF concerts
+                SET C TO concerts[I]
+
+                IF C.GET_DATE() EQUALS date THEN
+                    RETURN TRUE
+                END IF
+            END REPEAT
+
+            RETURN FALSE
+        END METHOD
+
+        ADD_CONCERT(c : Concert)
+            IF HAS_DATE_CLASH(c.GET_DATE()) THEN
+                DISPLAY "Concert refused: venue already has a concert on this date"
+            ELSE
+                ADD c TO concerts
+                DISPLAY "Concert added to venue"
+            END IF
+        END METHOD
+END CLASS
+
+CLASS Concert
+    ATTRIBUTES
+        concertName : TEXT
+        concertDate : TEXT
+        artist : Artist
+        venue : Venue
+        priceTiers : LIST<PriceTier>
+        soldTickets : LIST<Ticket>
+
+    CONSTRUCTOR(name : TEXT, date : TEXT, a : Artist, v : Venue)
+        SET concertName TO name
+        SET concertDate TO date
+        SET artist TO a
+        SET venue TO v
+        SET priceTiers TO LIST []
+        SET soldTickets TO LIST []
+    END CONSTRUCTOR
+
+    METHODS
+        GET_DATE()
+            RETURN concertDate
+        END METHOD
+
+        ADD_PRICE_TIER(t : PriceTier)
+            ADD t TO priceTiers
+        END METHOD
+
+        IS_SEAT_SOLD(seat : TEXT)
+            REPEAT FROM I = 1 TO SIZE OF soldTickets
+                SET T TO soldTickets[I]
+
+                IF T.GET_SEAT_NUMBER() EQUALS seat THEN
+                    RETURN TRUE
+                END IF
+            END REPEAT
+
+            RETURN FALSE
+        END METHOD
+
+        COUNT_TICKETS_SOLD_IN_TIER(tier : PriceTier)
+            SET count TO 0
+
+            REPEAT FROM I = 1 TO SIZE OF soldTickets
+                SET T TO soldTickets[I]
+
+                IF T.GET_TIER() EQUALS tier THEN
+                    SET count TO count + 1
+                END IF
+            END REPEAT
+
+            RETURN count
+        END METHOD
+
+        IS_TIER_AVAILABLE(tier : PriceTier)
+            IF COUNT_TICKETS_SOLD_IN_TIER(tier) LESS THAN tier.GET_LIMIT() THEN
+                RETURN TRUE
+            ELSE
+                RETURN FALSE
+            END IF
+        END METHOD
+
+        BUY_TICKET(fanName : TEXT, seat : TEXT, tier : PriceTier)
+            IF IS_SEAT_SOLD(seat) THEN
+                DISPLAY "Ticket refused: seat already sold for this concert"
+            ELSE
+                IF NOT IS_TIER_AVAILABLE(tier) THEN
+                    DISPLAY "Ticket refused: selected tier is sold out"
+                ELSE
+                    CREATE OBJECT newTicket OF Ticket(fanName, seat, THIS, tier)
+                    ADD newTicket TO soldTickets
+                    DISPLAY "Ticket sold to " + fanName
+                    DISPLAY "Ticket price: " + newTicket.GET_PRICE()
+                END IF
+            END IF
+        END METHOD
+
+        GET_TOTAL_TICKET_LIMIT()
+            SET total TO 0
+
+            REPEAT FROM I = 1 TO SIZE OF priceTiers
+                SET T TO priceTiers[I]
+                SET total TO total + T.GET_LIMIT()
+            END REPEAT
+
+            RETURN total
+        END METHOD
+
+        GET_REMAINING_TICKETS()
+            RETURN GET_TOTAL_TICKET_LIMIT() - SIZE OF soldTickets
+        END METHOD
+END CLASS
+
+CLASS TicketingPlatform
+    ATTRIBUTES
+        platformName : TEXT
+        concerts : LIST<Concert>
+
+    CONSTRUCTOR(name : TEXT)
+        SET platformName TO name
+        SET concerts TO LIST []
+    END CONSTRUCTOR
+
+    METHODS
+        ADD_CONCERT(c : Concert)
+            ADD c TO concerts
+        END METHOD
+END CLASS
+
+START
+BEGIN
+    CREATE OBJECT platform1 OF TicketingPlatform("Live Tickets Oman")
+
+    CREATE OBJECT artist1 OF Artist("The Waves", "Pop")
+
+    CREATE OBJECT venue1 OF Venue("Muscat Arena", "A1, A2, B1, B2")
+
+    CREATE OBJECT concert1 OF Concert("Summer Night Concert", "2026-09-10", artist1, venue1)
+    CREATE OBJECT concert2 OF Concert("Second Night Concert", "2026-09-10", artist1, venue1)
+
+    venue1.ADD_CONCERT(concert1)
+    // Output: Concert added to venue
+
+    venue1.ADD_CONCERT(concert2)
+    // Output: Concert refused: venue already has a concert on this date
+
+    artist1.ADD_CONCERT(concert1)
+    platform1.ADD_CONCERT(concert1)
+
+    CREATE OBJECT vipTier OF PriceTier("VIP", 50, 1)
+    CREATE OBJECT regularTier OF PriceTier("Regular", 20, 2)
+
+    concert1.ADD_PRICE_TIER(vipTier)
+    concert1.ADD_PRICE_TIER(regularTier)
+
+    concert1.BUY_TICKET("Ahmed", "A1", vipTier)
+    // Output: Ticket sold to Ahmed
+    // Output: Ticket price: 50
+
+    concert1.BUY_TICKET("Sara", "A1", regularTier)
+    // Output: Ticket refused: seat already sold for this concert
+
+    concert1.BUY_TICKET("Ali", "A2", vipTier)
+    // Output: Ticket refused: selected tier is sold out
+
+    concert1.BUY_TICKET("Muna", "B1", regularTier)
+    // Output: Ticket sold to Muna
+    // Output: Ticket price: 20
+
+    DISPLAY concert1.GET_REMAINING_TICKETS()
+    // Output: 1
+END
+STOP
+
+TASK 286
+
+CLASS Developer
+    ATTRIBUTES
+        developerName : TEXT
+        profile : TEXT
+        sprintCapacity : NUMBER
+        assignedTasks : LIST<SprintTask>
+
+    CONSTRUCTOR(name : TEXT, prof : TEXT, capacity : NUMBER)
+        SET developerName TO name
+        SET profile TO prof
+        SET sprintCapacity TO capacity
+        SET assignedTasks TO LIST []
+    END CONSTRUCTOR
+
+    METHODS
+        GET_NAME()
+            RETURN developerName
+        END METHOD
+
+        GET_CAPACITY()
+            RETURN sprintCapacity
+        END METHOD
+
+        COUNT_TASKS_IN_SPRINT(sprintName : TEXT)
+            SET count TO 0
+
+            REPEAT FROM I = 1 TO SIZE OF assignedTasks
+                SET T TO assignedTasks[I]
+
+                IF T.GET_SPRINT_NAME() EQUALS sprintName THEN
+                    SET count TO count + 1
+                END IF
+            END REPEAT
+
+            RETURN count
+        END METHOD
+
+        CAN_ACCEPT_TASK(sprintName : TEXT)
+            IF COUNT_TASKS_IN_SPRINT(sprintName) LESS THAN sprintCapacity THEN
+                RETURN TRUE
+            ELSE
+                RETURN FALSE
+            END IF
+        END METHOD
+
+        ASSIGN_TASK(t : SprintTask)
+            IF CAN_ACCEPT_TASK(t.GET_SPRINT_NAME()) THEN
+                ADD t TO assignedTasks
+                DISPLAY "Task assigned to " + developerName
+            ELSE
+                DISPLAY "Assignment refused: developer capacity exceeded"
+            END IF
+        END METHOD
+END CLASS
+
+CLASS SprintTask
+    ATTRIBUTES
+        taskTitle : TEXT
+        description : TEXT
+        status : TEXT
+        developer : Developer
+        sprintName : TEXT
+
+    CONSTRUCTOR(title : TEXT, desc : TEXT)
+        SET taskTitle TO title
+        SET description TO desc
+        SET status TO "To Do"
+        SET developer TO NULL
+        SET sprintName TO ""
+    END CONSTRUCTOR
+
+    METHODS
+        GET_TITLE()
+            RETURN taskTitle
+        END METHOD
+
+        GET_STATUS()
+            RETURN status
+        END METHOD
+
+        GET_SPRINT_NAME()
+            RETURN sprintName
+        END METHOD
+
+        SET_SPRINT_NAME(name : TEXT)
+            SET sprintName TO name
+        END METHOD
+
+        SET_DEVELOPER(dev : Developer)
+            SET developer TO dev
+        END METHOD
+
+        MOVE_TO_IN_PROGRESS()
+            IF status EQUALS "To Do" THEN
+                SET status TO "In Progress"
+            ELSE
+                DISPLAY "Invalid status change"
+            END IF
+        END METHOD
+
+        MOVE_TO_REVIEW()
+            IF status EQUALS "In Progress" THEN
+                SET status TO "Review"
+            ELSE
+                DISPLAY "Task must be in progress before review"
+            END IF
+        END METHOD
+
+        MARK_COMPLETE()
+            IF status EQUALS "Review" THEN
+                SET status TO "Complete"
+            ELSE
+                DISPLAY "Task cannot be completed from an earlier stage"
+            END IF
+        END METHOD
+
+        IS_COMPLETE()
+            IF status EQUALS "Complete" THEN
+                RETURN TRUE
+            ELSE
+                RETURN FALSE
+            END IF
+        END METHOD
+END CLASS
+
+CLASS Backlog
+    ATTRIBUTES
+        backlogName : TEXT
+        tasks : LIST<SprintTask>
+
+    CONSTRUCTOR(name : TEXT)
+        SET backlogName TO name
+        SET tasks TO LIST []
+    END CONSTRUCTOR
+
+    METHODS
+        ADD_TASK(t : SprintTask)
+            ADD t TO tasks
+        END METHOD
+
+        REMOVE_TASK(t : SprintTask)
+            REMOVE t FROM tasks
+        END METHOD
+END CLASS
+
+CLASS Sprint
+    ATTRIBUTES
+        sprintName : TEXT
+        startDate : TEXT
+        endDate : TEXT
+        tasks : LIST<SprintTask>
+
+    CONSTRUCTOR(name : TEXT, start : TEXT, end : TEXT)
+        SET sprintName TO name
+        SET startDate TO start
+        SET endDate TO end
+        SET tasks TO LIST []
+    END CONSTRUCTOR
+
+    METHODS
+        GET_NAME()
+            RETURN sprintName
+        END METHOD
+
+        ADD_TASK_FROM_BACKLOG(t : SprintTask, dev : Developer)
+            IF dev.CAN_ACCEPT_TASK(sprintName) THEN
+                t.SET_SPRINT_NAME(sprintName)
+                t.SET_DEVELOPER(dev)
+                dev.ASSIGN_TASK(t)
+                ADD t TO tasks
+                DISPLAY "Task added to sprint"
+            ELSE
+                DISPLAY "Task refused: developer has no capacity in this sprint"
+            END IF
+        END METHOD
+
+        GET_PROGRESS_PERCENTAGE()
+            IF SIZE OF tasks EQUALS 0 THEN
+                RETURN 0
+            ELSE
+                SET completeCount TO 0
+
+                REPEAT FROM I = 1 TO SIZE OF tasks
+                    SET T TO tasks[I]
+
+                    IF T.IS_COMPLETE() THEN
+                        SET completeCount TO completeCount + 1
+                    END IF
+                END REPEAT
+
+                RETURN (completeCount / SIZE OF tasks) * 100
+            END IF
+        END METHOD
+END CLASS
+
+CLASS SoftwareTeam
+    ATTRIBUTES
+        teamName : TEXT
+        developers : LIST<Developer>
+        sprints : LIST<Sprint>
+        backlog : Backlog
+
+    CONSTRUCTOR(name : TEXT, b : Backlog)
+        SET teamName TO name
+        SET developers TO LIST []
+        SET sprints TO LIST []
+        SET backlog TO b
+    END CONSTRUCTOR
+
+    METHODS
+        ADD_DEVELOPER(d : Developer)
+            ADD d TO developers
+        END METHOD
+
+        ADD_SPRINT(s : Sprint)
+            ADD s TO sprints
+        END METHOD
+END CLASS
+
+START
+BEGIN
+    CREATE OBJECT backlog1 OF Backlog("Product Backlog")
+
+    CREATE OBJECT task1 OF SprintTask("Login Page", "Create user login page")
+    CREATE OBJECT task2 OF SprintTask("Register Page", "Create user registration page")
+    CREATE OBJECT task3 OF SprintTask("Dashboard", "Create dashboard screen")
+
+    backlog1.ADD_TASK(task1)
+    backlog1.ADD_TASK(task2)
+    backlog1.ADD_TASK(task3)
+
+    CREATE OBJECT developer1 OF Developer("Ahmed", "Frontend Developer", 2)
+    CREATE OBJECT developer2 OF Developer("Sara", "Backend Developer", 1)
+
+    CREATE OBJECT sprint1 OF Sprint("Sprint 1", "2026-07-01", "2026-07-14")
+
+    CREATE OBJECT team1 OF SoftwareTeam("Alpha Team", backlog1)
+
+    team1.ADD_DEVELOPER(developer1)
+    team1.ADD_DEVELOPER(developer2)
+    team1.ADD_SPRINT(sprint1)
+
+    sprint1.ADD_TASK_FROM_BACKLOG(task1, developer1)
+    // Output: Task assigned to Ahmed
+    // Output: Task added to sprint
+
+    sprint1.ADD_TASK_FROM_BACKLOG(task2, developer1)
+    // Output: Task assigned to Ahmed
+    // Output: Task added to sprint
+
+    sprint1.ADD_TASK_FROM_BACKLOG(task3, developer1)
+    // Output: Task refused: developer has no capacity in this sprint
+
+    task1.MARK_COMPLETE()
+    // Output: Task cannot be completed from an earlier stage
+
+    task1.MOVE_TO_IN_PROGRESS()
+    task1.MOVE_TO_REVIEW()
+    task1.MARK_COMPLETE()
+
+    DISPLAY sprint1.GET_PROGRESS_PERCENTAGE()
+    // Output: 50
+
+END
+STOP
+
+TASK 287
+
+CLASS Crop
+    ATTRIBUTES
+        cropName : TEXT
+        growingRequirements : TEXT
+        waterNeed : NUMBER
+        expectedYield : NUMBER
+
+    CONSTRUCTOR(name : TEXT, requirements : TEXT, water : NUMBER, yield : NUMBER)
+        SET cropName TO name
+        SET growingRequirements TO requirements
+        SET waterNeed TO water
+        SET expectedYield TO yield
+    END CONSTRUCTOR
+
+    METHODS
+        GET_NAME()
+            RETURN cropName
+        END METHOD
+
+        GET_WATER_NEED()
+            RETURN waterNeed
+        END METHOD
+
+        GET_EXPECTED_YIELD()
+            RETURN expectedYield
+        END METHOD
+END CLASS
+
+CLASS Activity
+    ATTRIBUTES
+        activityType : TEXT
+        activityDate : TEXT
+        amount : NUMBER
+        worker : Worker
+
+    CONSTRUCTOR(type : TEXT, date : TEXT, a : NUMBER, w : Worker)
+        SET activityType TO type
+        SET activityDate TO date
+        SET amount TO a
+        SET worker TO w
+    END CONSTRUCTOR
+
+    METHODS
+        GET_TYPE()
+            RETURN activityType
+        END METHOD
+
+        GET_DATE()
+            RETURN activityDate
+        END METHOD
+
+        GET_AMOUNT()
+            RETURN amount
+        END METHOD
+
+        IS_PROPER_CARE(crop : Crop)
+            IF activityType EQUALS "Watering" THEN
+                IF amount GREATER THAN OR EQUAL TO crop.GET_WATER_NEED() THEN
+                    RETURN TRUE
+                ELSE
+                    RETURN FALSE
+                END IF
+            ELSE
+                IF activityType EQUALS "Fertilizing" AND amount GREATER THAN 0 THEN
+                    RETURN TRUE
+                ELSE
+                    RETURN FALSE
+                END IF
+            END IF
+        END METHOD
+END CLASS
+
+CLASS Worker
+    ATTRIBUTES
+        workerName : TEXT
+        workerRecord : TEXT
+        dailyActivityLimit : NUMBER
+        assignedActivities : LIST<Activity>
+
+    CONSTRUCTOR(name : TEXT, record : TEXT, limit : NUMBER)
+        SET workerName TO name
+        SET workerRecord TO record
+        SET dailyActivityLimit TO limit
+        SET assignedActivities TO LIST []
+    END CONSTRUCTOR
+
+    METHODS
+        GET_NAME()
+            RETURN workerName
+        END METHOD
+
+        COUNT_ACTIVITIES_ON_DATE(date : TEXT)
+            SET count TO 0
+
+            REPEAT FROM I = 1 TO SIZE OF assignedActivities
+                SET A TO assignedActivities[I]
+
+                IF A.GET_DATE() EQUALS date THEN
+                    SET count TO count + 1
+                END IF
+            END REPEAT
+
+            RETURN count
+        END METHOD
+
+        CAN_ACCEPT_ACTIVITY(date : TEXT)
+            IF COUNT_ACTIVITIES_ON_DATE(date) LESS THAN dailyActivityLimit THEN
+                RETURN TRUE
+            ELSE
+                RETURN FALSE
+            END IF
+        END METHOD
+
+        ASSIGN_ACTIVITY(a : Activity)
+            IF CAN_ACCEPT_ACTIVITY(a.GET_DATE()) THEN
+                ADD a TO assignedActivities
+                DISPLAY "Activity assigned to " + workerName
+            ELSE
+                DISPLAY "Assignment refused: worker daily limit reached"
+            END IF
+        END METHOD
+END CLASS
+
+CLASS Field
+    ATTRIBUTES
+        fieldName : TEXT
+        season : TEXT
+        crop : Crop
+        activityLog : LIST<Activity>
+
+    CONSTRUCTOR(name : TEXT, s : TEXT, c : Crop)
+        SET fieldName TO name
+        SET season TO s
+        SET crop TO c
+        SET activityLog TO LIST []
+    END CONSTRUCTOR
+
+    METHODS
+        ADD_ACTIVITY(type : TEXT, date : TEXT, amount : NUMBER, worker : Worker)
+            IF NOT worker.CAN_ACCEPT_ACTIVITY(date) THEN
+                DISPLAY "Activity refused: worker daily limit reached"
+            ELSE
+                IF type EQUALS "Watering" AND amount LESS THAN crop.GET_WATER_NEED() THEN
+                    DISPLAY "Activity refused: water amount is below crop requirement"
+                ELSE
+                    CREATE OBJECT newActivity OF Activity(type, date, amount, worker)
+
+                    ADD newActivity TO activityLog
+                    worker.ASSIGN_ACTIVITY(newActivity)
+
+                    DISPLAY type + " activity logged successfully"
+                END IF
+            END IF
+        END METHOD
+
+        GET_CARE_PERCENTAGE()
+            IF SIZE OF activityLog EQUALS 0 THEN
+                RETURN 0
+            ELSE
+                SET properCareCount TO 0
+
+                REPEAT FROM I = 1 TO SIZE OF activityLog
+                    SET A TO activityLog[I]
+
+                    IF A.IS_PROPER_CARE(crop) THEN
+                        SET properCareCount TO properCareCount + 1
+                    END IF
+                END REPEAT
+
+                RETURN (properCareCount / SIZE OF activityLog) * 100
+            END IF
+        END METHOD
+
+        GET_ESTIMATED_YIELD()
+            RETURN crop.GET_EXPECTED_YIELD() * (GET_CARE_PERCENTAGE() / 100)
+        END METHOD
+END CLASS
+
+CLASS Farm
+    ATTRIBUTES
+        farmName : TEXT
+        fields : LIST<Field>
+        workers : LIST<Worker>
+
+    CONSTRUCTOR(name : TEXT)
+        SET farmName TO name
+        SET fields TO LIST []
+        SET workers TO LIST []
+    END CONSTRUCTOR
+
+    METHODS
+        ADD_FIELD(f : Field)
+            ADD f TO fields
+        END METHOD
+
+        ADD_WORKER(w : Worker)
+            ADD w TO workers
+        END METHOD
+END CLASS
+
+START
+BEGIN
+    CREATE OBJECT farm1 OF Farm("Green Valley Farm")
+
+    CREATE OBJECT wheat OF Crop(
+        "Wheat",
+        "Regular watering and fertilizing",
+        20,
+        1000
+    )
+
+    CREATE OBJECT field1 OF Field("Field A", "Summer 2026", wheat)
+
+    farm1.ADD_FIELD(field1)
+
+    CREATE OBJECT worker1 OF Worker(
+        "Ahmed",
+        "Experienced farm worker",
+        2
+    )
+
+    farm1.ADD_WORKER(worker1)
+
+    field1.ADD_ACTIVITY("Watering", "2026-07-10", 10, worker1)
+    // Output: Activity refused: water amount is below crop requirement
+
+    field1.ADD_ACTIVITY("Watering", "2026-07-10", 25, worker1)
+    // Output: Activity assigned to Ahmed
+    // Output: Watering activity logged successfully
+
+    field1.ADD_ACTIVITY("Fertilizing", "2026-07-10", 5, worker1)
+    // Output: Activity assigned to Ahmed
+    // Output: Fertilizing activity logged successfully
+
+    field1.ADD_ACTIVITY("Watering", "2026-07-10", 30, worker1)
+    // Output: Activity refused: worker daily limit reached
+
+    DISPLAY worker1.COUNT_ACTIVITIES_ON_DATE("2026-07-10")
+    // Output: 2
+
+    DISPLAY field1.GET_CARE_PERCENTAGE()
+    // Output: 100
+
+    DISPLAY field1.GET_ESTIMATED_YIELD()
+    // Output: 1000
+
+END
+STOP
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
