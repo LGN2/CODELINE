@@ -1,149 +1,185 @@
-TASK 288
+TASK 288: BOOKSHOP
 
 CLASS Genre
     ATTRIBUTES
-        genreName : TEXT
-        description : TEXT
+        PRIVATE genreName : TEXT
+        PRIVATE description : TEXT
 
     CONSTRUCTOR(name : TEXT, desc : TEXT)
-        SET genreName TO name
-        SET description TO desc
+        SET this.genreName TO name
+        SET this.description TO desc
     END CONSTRUCTOR
 
     METHODS
         GET_NAME()
-            RETURN genreName
+            RETURN this.genreName
         END METHOD
 END CLASS
 
 CLASS Book
     ATTRIBUTES
-        title : TEXT
-        author : TEXT
-        price : NUMBER
-        genre : Genre
+        PRIVATE title : TEXT
+        PRIVATE author : TEXT
+        PRIVATE price : NUMBER
+        PRIVATE genre : Genre
 
     CONSTRUCTOR(t : TEXT, a : TEXT, p : NUMBER, g : Genre)
-        SET title TO t
-        SET author TO a
-        SET price TO p
-        SET genre TO g
+        SET this.title TO t
+        SET this.author TO a
+
+        IF p GREATER THAN 0 THEN
+            SET this.price TO p
+        ELSE
+            SET this.price TO 0
+            DISPLAY "Invalid book price"
+        END IF
+
+        IF g NOT EQUALS NULL THEN
+            SET this.genre TO g
+        ELSE
+            DISPLAY "Invalid genre"
+        END IF
     END CONSTRUCTOR
 
     METHODS
         GET_TITLE()
-            RETURN title
+            RETURN this.title
         END METHOD
 
         GET_AUTHOR()
-            RETURN author
+            RETURN this.author
         END METHOD
 
         GET_PRICE()
-            RETURN price
+            RETURN this.price
         END METHOD
 
-        GET_GENRE()
-            RETURN genre
+        GET_GENRE_NAME()
+            RETURN this.genre.GET_NAME()
         END METHOD
 END CLASS
 
 CLASS Sale
     ATTRIBUTES
-        book : Book
-        customer : Customer
-        soldPrice : NUMBER
-        saleDate : TEXT
+        PRIVATE book : Book
+        PRIVATE customer : Customer
+        PRIVATE soldPrice : NUMBER
+        PRIVATE saleDate : TEXT
 
     CONSTRUCTOR(b : Book, c : Customer, price : NUMBER, date : TEXT)
-        SET book TO b
-        SET customer TO c
-        SET soldPrice TO price
-        SET saleDate TO date
+        SET this.book TO b
+        SET this.customer TO c
+        SET this.soldPrice TO price
+        SET this.saleDate TO date
     END CONSTRUCTOR
 
     METHODS
-        GET_BOOK()
-            RETURN book
+        GET_BOOK_TITLE()
+            RETURN this.book.GET_TITLE()
         END METHOD
 
         GET_SOLD_PRICE()
-            RETURN soldPrice
+            RETURN this.soldPrice
         END METHOD
 
         GET_SALE_DATE()
-            RETURN saleDate
+            RETURN this.saleDate
         END METHOD
 END CLASS
 
 CLASS Customer
     ATTRIBUTES
-        customerName : TEXT
-        phoneNumber : TEXT
-        purchaseHistory : LIST<Sale>
+        PRIVATE customerName : TEXT
+        PRIVATE phoneNumber : TEXT
+        PRIVATE purchaseHistory : LIST<Sale>
 
     CONSTRUCTOR(name : TEXT, phone : TEXT)
-        SET customerName TO name
-        SET phoneNumber TO phone
-        SET purchaseHistory TO LIST []
+        SET this.customerName TO name
+        SET this.phoneNumber TO phone
+        SET this.purchaseHistory TO LIST []
     END CONSTRUCTOR
 
     METHODS
         GET_NAME()
-            RETURN customerName
+            RETURN this.customerName
         END METHOD
 
         ADD_PURCHASE(s : Sale)
-            ADD s TO purchaseHistory
+            ADD s TO this.purchaseHistory
         END METHOD
 
         GET_PURCHASE_COUNT()
-            RETURN SIZE OF purchaseHistory
+            RETURN SIZE OF this.purchaseHistory
         END METHOD
 
         GET_TOTAL_SPENT()
             SET total TO 0
 
-            REPEAT FROM I = 1 TO SIZE OF purchaseHistory
-                SET S TO purchaseHistory[I]
+            REPEAT FROM I = 1 TO SIZE OF this.purchaseHistory
+                SET S TO this.purchaseHistory[I]
                 SET total TO total + S.GET_SOLD_PRICE()
             END REPEAT
 
             RETURN total
         END METHOD
+
+        DISPLAY_PURCHASE_HISTORY()
+            REPEAT FROM I = 1 TO SIZE OF this.purchaseHistory
+                SET S TO this.purchaseHistory[I]
+
+                DISPLAY "Book: " + S.GET_BOOK_TITLE()
+                DISPLAY "Price: OMR " + S.GET_SOLD_PRICE()
+                DISPLAY "Date: " + S.GET_SALE_DATE()
+            END REPEAT
+        END METHOD
 END CLASS
 
 CLASS Bookshop
     ATTRIBUTES
-        shopName : TEXT
-        books : LIST<Book>
-        customers : LIST<Customer>
-        sales : LIST<Sale>
+        PRIVATE shopName : TEXT
+        PRIVATE books : LIST<Book>
+        PRIVATE customers : LIST<Customer>
+        PRIVATE sales : LIST<Sale>
 
     CONSTRUCTOR(name : TEXT)
-        SET shopName TO name
-        SET books TO LIST []
-        SET customers TO LIST []
-        SET sales TO LIST []
+        SET this.shopName TO name
+        SET this.books TO LIST []
+        SET this.customers TO LIST []
+        SET this.sales TO LIST []
     END CONSTRUCTOR
 
     METHODS
         ADD_BOOK(b : Book)
-            ADD b TO books
+            ADD b TO this.books
         END METHOD
 
         ADD_CUSTOMER(c : Customer)
-            ADD c TO customers
+            ADD c TO this.customers
         END METHOD
 
         SELL_BOOK(book : Book, customer : Customer, soldPrice : NUMBER, date : TEXT)
-            CREATE OBJECT newSale OF Sale(book, customer, soldPrice, date)
+            IF soldPrice LESS THAN OR EQUAL TO 0 THEN
+                DISPLAY "Sale refused: invalid sale price"
+            ELSE
+                CREATE OBJECT newSale OF Sale(book, customer, soldPrice, date)
 
-            ADD newSale TO sales
-            customer.ADD_PURCHASE(newSale)
+                ADD newSale TO this.sales
+                customer.ADD_PURCHASE(newSale)
 
-            DISPLAY "Sale completed successfully"
-            DISPLAY customer.GET_NAME() + " bought " + book.GET_TITLE()
+                DISPLAY "Sale completed successfully"
+                DISPLAY customer.GET_NAME() + " bought " + book.GET_TITLE()
+            END IF
+        END METHOD
+
+        DISPLAY_ALL_BOOKS()
+            REPEAT FROM I = 1 TO SIZE OF this.books
+                SET B TO this.books[I]
+
+                DISPLAY "Title: " + B.GET_TITLE()
+                DISPLAY "Author: " + B.GET_AUTHOR()
+                DISPLAY "Genre: " + B.GET_GENRE_NAME()
+                DISPLAY "Price: OMR " + B.GET_PRICE()
+            END REPEAT
         END METHOD
 END CLASS
 
@@ -175,15 +211,16 @@ BEGIN
         technologyGenre
     )
 
-    bookshop1.ADD_BOOK(book1)
-    bookshop1.ADD_BOOK(book2)
-
     CREATE OBJECT customer1 OF Customer(
         "Omar",
         "91234567"
     )
 
+    bookshop1.ADD_BOOK(book1)
+    bookshop1.ADD_BOOK(book2)
     bookshop1.ADD_CUSTOMER(customer1)
+
+    bookshop1.DISPLAY_ALL_BOOKS()
 
     bookshop1.SELL_BOOK(
         book1,
@@ -191,8 +228,6 @@ BEGIN
         5,
         "2026-07-12"
     )
-    // Output: Sale completed successfully
-    // Output: Omar bought The Silent City
 
     bookshop1.SELL_BOOK(
         book2,
@@ -200,47 +235,46 @@ BEGIN
         10,
         "2026-07-15"
     )
-    // Output: Sale completed successfully
-    // Output: Omar bought Learning Java
 
-    DISPLAY customer1.GET_PURCHASE_COUNT()
-    // Output: 2
+    DISPLAY "Purchase count: " + customer1.GET_PURCHASE_COUNT()
+    DISPLAY "Total spent: OMR " + customer1.GET_TOTAL_SPENT()
 
-    DISPLAY customer1.GET_TOTAL_SPENT()
-    // Output: 15
-
+    customer1.DISPLAY_PURCHASE_HISTORY()
 END
 STOP
 
-TASK 289
+
+TASK 289: ONLINE EXAM PLATFORM
 
 CLASS Question
     ATTRIBUTES
-        questionText : TEXT
-        correctAnswer : TEXT
-        pointValue : NUMBER
+        PRIVATE questionText : TEXT
+        PRIVATE correctAnswer : TEXT
+        PRIVATE pointValue : NUMBER
 
     CONSTRUCTOR(text : TEXT, answer : TEXT, points : NUMBER)
-        SET questionText TO text
-        SET correctAnswer TO answer
-        SET pointValue TO points
+        SET this.questionText TO text
+        SET this.correctAnswer TO answer
+
+        IF points GREATER THAN 0 THEN
+            SET this.pointValue TO points
+        ELSE
+            SET this.pointValue TO 0
+            DISPLAY "Invalid point value"
+        END IF
     END CONSTRUCTOR
 
     METHODS
         GET_TEXT()
-            RETURN questionText
-        END METHOD
-
-        GET_CORRECT_ANSWER()
-            RETURN correctAnswer
+            RETURN this.questionText
         END METHOD
 
         GET_POINT_VALUE()
-            RETURN pointValue
+            RETURN this.pointValue
         END METHOD
 
         IS_CORRECT(answer : TEXT)
-            IF answer EQUALS correctAnswer THEN
+            IF answer EQUALS this.correctAnswer THEN
                 RETURN TRUE
             ELSE
                 RETURN FALSE
@@ -250,58 +284,64 @@ END CLASS
 
 CLASS SelectedAnswer
     ATTRIBUTES
-        question : Question
-        answerText : TEXT
+        PRIVATE question : Question
+        PRIVATE answerText : TEXT
 
     CONSTRUCTOR(q : Question, answer : TEXT)
-        SET question TO q
-        SET answerText TO answer
+        SET this.question TO q
+        SET this.answerText TO answer
     END CONSTRUCTOR
 
     METHODS
         GET_QUESTION()
-            RETURN question
+            RETURN this.question
         END METHOD
 
         GET_ANSWER()
-            RETURN answerText
+            RETURN this.answerText
         END METHOD
 END CLASS
 
 CLASS Exam
     ATTRIBUTES
-        examName : TEXT
-        timeLimitMinutes : NUMBER
-        questions : LIST<Question>
+        PRIVATE examName : TEXT
+        PRIVATE timeLimitMinutes : NUMBER
+        PRIVATE questions : LIST<Question>
 
-    CONSTRUCTOR(name : TEXT, limit : NUMBER)
-        SET examName TO name
-        SET timeLimitMinutes TO limit
-        SET questions TO LIST []
+    CONSTRUCTOR(name : TEXT, limitMinutes : NUMBER)
+        SET this.examName TO name
+        SET this.timeLimitMinutes TO limitMinutes
+        SET this.questions TO LIST []
     END CONSTRUCTOR
 
     METHODS
         GET_NAME()
-            RETURN examName
+            RETURN this.examName
         END METHOD
 
-        GET_TIME_LIMIT()
-            RETURN timeLimitMinutes
+        GET_TIME_LIMIT_MINUTES()
+            RETURN this.timeLimitMinutes
         END METHOD
 
         ADD_QUESTION(q : Question)
-            ADD q TO questions
+            ADD q TO this.questions
         END METHOD
 
-        GET_QUESTIONS()
-            RETURN questions
+        CONTAINS_QUESTION(q : Question)
+            REPEAT FROM I = 1 TO SIZE OF this.questions
+                IF this.questions[I] EQUALS q THEN
+                    RETURN TRUE
+                END IF
+            END REPEAT
+
+            RETURN FALSE
         END METHOD
 
         GET_TOTAL_POINTS()
             SET total TO 0
 
-            REPEAT FROM I = 1 TO SIZE OF questions
-                SET Q TO questions[I]
+            REPEAT FROM I = 1 TO SIZE OF this.questions
+                SET Q TO this.questions[I]
                 SET total TO total + Q.GET_POINT_VALUE()
             END REPEAT
 
@@ -311,21 +351,23 @@ END CLASS
 
 CLASS Attempt
     ATTRIBUTES
-        exam : Exam
-        student : Student
-        startTime : NUMBER
-        selectedAnswers : LIST<SelectedAnswer>
+        PRIVATE exam : Exam
+        PRIVATE student : Student
+        PRIVATE startTimeMinutes : NUMBER
+        PRIVATE selectedAnswers : LIST<SelectedAnswer>
 
-    CONSTRUCTOR(e : Exam, s : Student, start : NUMBER)
-        SET exam TO e
-        SET student TO s
-        SET startTime TO start
-        SET selectedAnswers TO LIST []
+    CONSTRUCTOR(e : Exam, s : Student, startMinutes : NUMBER)
+        SET this.exam TO e
+        SET this.student TO s
+        SET this.startTimeMinutes TO startMinutes
+        SET this.selectedAnswers TO LIST []
     END CONSTRUCTOR
 
     METHODS
-        HAS_TIME_EXPIRED(currentTime : NUMBER)
-            IF currentTime - startTime GREATER THAN OR EQUAL TO exam.GET_TIME_LIMIT() THEN
+        HAS_TIME_EXPIRED(currentTimeMinutes : NUMBER)
+            SET elapsedMinutes TO currentTimeMinutes - this.startTimeMinutes
+
+            IF elapsedMinutes GREATER THAN OR EQUAL TO this.exam.GET_TIME_LIMIT_MINUTES() THEN
                 RETURN TRUE
             ELSE
                 RETURN FALSE
@@ -333,8 +375,8 @@ CLASS Attempt
         END METHOD
 
         HAS_ANSWERED(q : Question)
-            REPEAT FROM I = 1 TO SIZE OF selectedAnswers
-                SET A TO selectedAnswers[I]
+            REPEAT FROM I = 1 TO SIZE OF this.selectedAnswers
+                SET A TO this.selectedAnswers[I]
 
                 IF A.GET_QUESTION() EQUALS q THEN
                     RETURN TRUE
@@ -344,16 +386,20 @@ CLASS Attempt
             RETURN FALSE
         END METHOD
 
-        SUBMIT_ANSWER(q : Question, answer : TEXT, currentTime : NUMBER)
-            IF HAS_TIME_EXPIRED(currentTime) THEN
-                DISPLAY "Answer refused: exam time limit has passed"
+        SUBMIT_ANSWER(q : Question, answer : TEXT, currentTimeMinutes : NUMBER)
+            IF NOT this.exam.CONTAINS_QUESTION(q) THEN
+                DISPLAY "Answer refused: question does not belong to this exam"
             ELSE
-                IF HAS_ANSWERED(q) THEN
-                    DISPLAY "Answer refused: question already answered"
+                IF HAS_TIME_EXPIRED(currentTimeMinutes) THEN
+                    DISPLAY "Answer refused: exam time limit has passed"
                 ELSE
-                    CREATE OBJECT selectedAnswer OF SelectedAnswer(q, answer)
-                    ADD selectedAnswer TO selectedAnswers
-                    DISPLAY "Answer submitted successfully"
+                    IF HAS_ANSWERED(q) THEN
+                        DISPLAY "Answer refused: question already answered"
+                    ELSE
+                        CREATE OBJECT selectedAnswer OF SelectedAnswer(q, answer)
+                        ADD selectedAnswer TO this.selectedAnswers
+                        DISPLAY "Answer submitted successfully"
+                    END IF
                 END IF
             END IF
         END METHOD
@@ -361,8 +407,8 @@ CLASS Attempt
         GET_SCORE()
             SET score TO 0
 
-            REPEAT FROM I = 1 TO SIZE OF selectedAnswers
-                SET A TO selectedAnswers[I]
+            REPEAT FROM I = 1 TO SIZE OF this.selectedAnswers
+                SET A TO this.selectedAnswers[I]
                 SET Q TO A.GET_QUESTION()
 
                 IF Q.IS_CORRECT(A.GET_ANSWER()) THEN
@@ -372,69 +418,75 @@ CLASS Attempt
 
             RETURN score
         END METHOD
-
-        GET_EXAM()
-            RETURN exam
-        END METHOD
 END CLASS
 
 CLASS Student
     ATTRIBUTES
-        studentName : TEXT
-        studentID : TEXT
-        attempts : LIST<Attempt>
+        PRIVATE studentName : TEXT
+        PRIVATE studentID : TEXT
+        PRIVATE attempts : LIST<Attempt>
 
     CONSTRUCTOR(name : TEXT, id : TEXT)
-        SET studentName TO name
-        SET studentID TO id
-        SET attempts TO LIST []
+        SET this.studentName TO name
+        SET this.studentID TO id
+        SET this.attempts TO LIST []
     END CONSTRUCTOR
 
     METHODS
         GET_NAME()
-            RETURN studentName
+            RETURN this.studentName
         END METHOD
 
-        START_ATTEMPT(exam : Exam, startTime : NUMBER)
-            CREATE OBJECT newAttempt OF Attempt(exam, THIS, startTime)
-            ADD newAttempt TO attempts
+        START_ATTEMPT(exam : Exam, startTimeMinutes : NUMBER)
+            CREATE OBJECT newAttempt OF Attempt(
+                exam,
+                THIS,
+                startTimeMinutes
+            )
 
+            ADD newAttempt TO this.attempts
             DISPLAY "New exam attempt created"
+
             RETURN newAttempt
         END METHOD
 
         GET_ATTEMPT_COUNT()
-            RETURN SIZE OF attempts
+            RETURN SIZE OF this.attempts
         END METHOD
 END CLASS
 
 CLASS OnlineExamPlatform
     ATTRIBUTES
-        platformName : TEXT
-        exams : LIST<Exam>
-        students : LIST<Student>
+        PRIVATE platformName : TEXT
+        PRIVATE exams : LIST<Exam>
+        PRIVATE students : LIST<Student>
 
     CONSTRUCTOR(name : TEXT)
-        SET platformName TO name
-        SET exams TO LIST []
-        SET students TO LIST []
+        SET this.platformName TO name
+        SET this.exams TO LIST []
+        SET this.students TO LIST []
     END CONSTRUCTOR
 
     METHODS
         ADD_EXAM(e : Exam)
-            ADD e TO exams
+            ADD e TO this.exams
         END METHOD
 
         ADD_STUDENT(s : Student)
-            ADD s TO students
+            ADD s TO this.students
         END METHOD
 END CLASS
 
 START
 BEGIN
-    CREATE OBJECT platform1 OF OnlineExamPlatform("Smart Exam Platform")
+    CREATE OBJECT platform1 OF OnlineExamPlatform(
+        "Smart Exam Platform"
+    )
 
-    CREATE OBJECT exam1 OF Exam("Java Basics", 30)
+    CREATE OBJECT exam1 OF Exam(
+        "Java Basics",
+        30
+    )
 
     CREATE OBJECT question1 OF Question(
         "Which keyword creates an object?",
@@ -460,144 +512,174 @@ BEGIN
 
     platform1.ADD_EXAM(exam1)
 
-    CREATE OBJECT student1 OF Student("Ahmed", "S001")
+    CREATE OBJECT student1 OF Student(
+        "Ahmed",
+        "S001"
+    )
+
     platform1.ADD_STUDENT(student1)
 
     SET attempt1 TO student1.START_ATTEMPT(exam1, 100)
 
     attempt1.SUBMIT_ANSWER(question1, "new", 110)
-    // Output: Answer submitted successfully
-
     attempt1.SUBMIT_ANSWER(question2, "String", 115)
-    // Output: Answer submitted successfully
-
     attempt1.SUBMIT_ANSWER(question3, "extends", 125)
-    // Output: Answer submitted successfully
 
-    DISPLAY attempt1.GET_SCORE()
-    // Output: 15
+    DISPLAY "First attempt score: " + attempt1.GET_SCORE()
+    DISPLAY "Maximum score: " + exam1.GET_TOTAL_POINTS()
 
     attempt1.SUBMIT_ANSWER(question1, "new", 131)
-    // Output: Answer refused: exam time limit has passed
 
     SET attempt2 TO student1.START_ATTEMPT(exam1, 200)
-    // Output: New exam attempt created
 
     attempt2.SUBMIT_ANSWER(question1, "new", 205)
     attempt2.SUBMIT_ANSWER(question2, "int", 210)
     attempt2.SUBMIT_ANSWER(question3, "extends", 215)
 
-    DISPLAY attempt2.GET_SCORE()
-    // Output: 20
-
-    DISPLAY student1.GET_ATTEMPT_COUNT()
-    // Output: 2
-
+    DISPLAY "Second attempt score: " + attempt2.GET_SCORE()
+    DISPLAY "Attempt count: " + student1.GET_ATTEMPT_COUNT()
 END
 STOP
 
-TASK 290
+
+TASK 290: TAXI COMPANY
 
 CLASS Vehicle
     ATTRIBUTES
-        plateNumber : TEXT
-        model : TEXT
-        color : TEXT
+        PRIVATE plateNumber : TEXT
+        PRIVATE model : TEXT
+        PRIVATE color : TEXT
 
     CONSTRUCTOR(plate : TEXT, m : TEXT, c : TEXT)
-        SET plateNumber TO plate
-        SET model TO m
-        SET color TO c
+        SET this.plateNumber TO plate
+        SET this.model TO m
+        SET this.color TO c
     END CONSTRUCTOR
 
     METHODS
         GET_PLATE_NUMBER()
-            RETURN plateNumber
+            RETURN this.plateNumber
         END METHOD
 
         GET_MODEL()
-            RETURN model
+            RETURN this.model
+        END METHOD
+
+        GET_COLOR()
+            RETURN this.color
         END METHOD
 END CLASS
 
 CLASS Passenger
     ATTRIBUTES
-        passengerName : TEXT
-        phoneNumber : TEXT
+        PRIVATE passengerName : TEXT
+        PRIVATE phoneNumber : TEXT
+        PRIVATE tripHistory : LIST<Trip>
 
     CONSTRUCTOR(name : TEXT, phone : TEXT)
-        SET passengerName TO name
-        SET phoneNumber TO phone
+        SET this.passengerName TO name
+        SET this.phoneNumber TO phone
+        SET this.tripHistory TO LIST []
     END CONSTRUCTOR
 
     METHODS
         GET_NAME()
-            RETURN passengerName
+            RETURN this.passengerName
+        END METHOD
+
+        ADD_TRIP(t : Trip)
+            ADD t TO this.tripHistory
+        END METHOD
+
+        GET_TRIP_COUNT()
+            RETURN SIZE OF this.tripHistory
         END METHOD
 END CLASS
 
 CLASS Trip
     ATTRIBUTES
-        pickupLocation : TEXT
-        dropoffLocation : TEXT
-        fare : NUMBER
-        driver : Driver
-        passenger : Passenger
+        PRIVATE pickupLocation : TEXT
+        PRIVATE dropoffLocation : TEXT
+        PRIVATE fare : NUMBER
+        PRIVATE driver : Driver
+        PRIVATE passenger : Passenger
+        PRIVATE tripStatus : TEXT
 
     CONSTRUCTOR(pickup : TEXT, dropoff : TEXT, f : NUMBER, d : Driver, p : Passenger)
-        SET pickupLocation TO pickup
-        SET dropoffLocation TO dropoff
-        SET fare TO f
-        SET driver TO d
-        SET passenger TO p
+        SET this.pickupLocation TO pickup
+        SET this.dropoffLocation TO dropoff
+        SET this.fare TO f
+        SET this.driver TO d
+        SET this.passenger TO p
+        SET this.tripStatus TO "In Progress"
     END CONSTRUCTOR
 
     METHODS
         GET_FARE()
-            RETURN fare
-        END METHOD
-
-        GET_PASSENGER()
-            RETURN passenger
+            RETURN this.fare
         END METHOD
 
         GET_PICKUP()
-            RETURN pickupLocation
+            RETURN this.pickupLocation
         END METHOD
 
         GET_DROPOFF()
-            RETURN dropoffLocation
+            RETURN this.dropoffLocation
+        END METHOD
+
+        COMPLETE_TRIP()
+            SET this.tripStatus TO "Completed"
+            this.driver.SET_AVAILABLE(TRUE)
+            DISPLAY "Trip completed"
         END METHOD
 END CLASS
 
 CLASS Driver
     ATTRIBUTES
-        driverName : TEXT
-        phoneNumber : TEXT
-        vehicle : Vehicle
-        trips : LIST<Trip>
+        PRIVATE driverName : TEXT
+        PRIVATE phoneNumber : TEXT
+        PRIVATE vehicle : Vehicle
+        PRIVATE trips : LIST<Trip>
+        PRIVATE isAvailable : BOOLEAN
 
     CONSTRUCTOR(name : TEXT, phone : TEXT, v : Vehicle)
-        SET driverName TO name
-        SET phoneNumber TO phone
-        SET vehicle TO v
-        SET trips TO LIST []
+        SET this.driverName TO name
+        SET this.phoneNumber TO phone
+        SET this.vehicle TO v
+        SET this.trips TO LIST []
+        SET this.isAvailable TO TRUE
     END CONSTRUCTOR
 
     METHODS
         GET_NAME()
-            RETURN driverName
+            RETURN this.driverName
+        END METHOD
+
+        GET_VEHICLE_MODEL()
+            RETURN this.vehicle.GET_MODEL()
+        END METHOD
+
+        GET_VEHICLE_COLOR()
+            RETURN this.vehicle.GET_COLOR()
+        END METHOD
+
+        IS_AVAILABLE()
+            RETURN this.isAvailable
+        END METHOD
+
+        SET_AVAILABLE(value : BOOLEAN)
+            SET this.isAvailable TO value
         END METHOD
 
         ADD_TRIP(t : Trip)
-            ADD t TO trips
+            ADD t TO this.trips
         END METHOD
 
         GET_TOTAL_FARES()
             SET total TO 0
 
-            REPEAT FROM I = 1 TO SIZE OF trips
-                SET T TO trips[I]
+            REPEAT FROM I = 1 TO SIZE OF this.trips
+                SET T TO this.trips[I]
                 SET total TO total + T.GET_FARE()
             END REPEAT
 
@@ -605,34 +687,66 @@ CLASS Driver
         END METHOD
 
         GET_TRIP_COUNT()
-            RETURN SIZE OF trips
+            RETURN SIZE OF this.trips
         END METHOD
 END CLASS
 
 CLASS TaxiCompany
     ATTRIBUTES
-        companyName : TEXT
-        drivers : LIST<Driver>
-        trips : LIST<Trip>
+        PRIVATE companyName : TEXT
+        PRIVATE drivers : LIST<Driver>
+        PRIVATE trips : LIST<Trip>
 
     CONSTRUCTOR(name : TEXT)
-        SET companyName TO name
-        SET drivers TO LIST []
-        SET trips TO LIST []
+        SET this.companyName TO name
+        SET this.drivers TO LIST []
+        SET this.trips TO LIST []
     END CONSTRUCTOR
 
     METHODS
         ADD_DRIVER(d : Driver)
-            ADD d TO drivers
+            ADD d TO this.drivers
+        END METHOD
+
+        FIND_DRIVER_BY_NAME(name : TEXT)
+            REPEAT FROM I = 1 TO SIZE OF this.drivers
+                SET D TO this.drivers[I]
+
+                IF D.GET_NAME() EQUALS name THEN
+                    RETURN D
+                END IF
+            END REPEAT
+
+            RETURN NULL
         END METHOD
 
         CREATE_TRIP(driver : Driver, passenger : Passenger, pickup : TEXT, dropoff : TEXT, fare : NUMBER)
-            CREATE OBJECT newTrip OF Trip(pickup, dropoff, fare, driver, passenger)
+            IF pickup EQUALS "" OR dropoff EQUALS "" THEN
+                DISPLAY "Trip refused: locations cannot be empty"
+            ELSE
+                IF fare LESS THAN OR EQUAL TO 0 THEN
+                    DISPLAY "Trip refused: fare must be greater than zero"
+                ELSE
+                    IF NOT driver.IS_AVAILABLE() THEN
+                        DISPLAY "Trip refused: driver is unavailable"
+                    ELSE
+                        CREATE OBJECT newTrip OF Trip(
+                            pickup,
+                            dropoff,
+                            fare,
+                            driver,
+                            passenger
+                        )
 
-            driver.ADD_TRIP(newTrip)
-            ADD newTrip TO trips
+                        driver.ADD_TRIP(newTrip)
+                        passenger.ADD_TRIP(newTrip)
+                        driver.SET_AVAILABLE(FALSE)
+                        ADD newTrip TO this.trips
 
-            DISPLAY "Trip created successfully"
+                        DISPLAY "Trip created successfully"
+                    END IF
+                END IF
+            END IF
         END METHOD
 END CLASS
 
@@ -640,15 +754,17 @@ START
 BEGIN
     CREATE OBJECT company1 OF TaxiCompany("Muscat Taxi")
 
-    CREATE OBJECT vehicle1 OF Vehicle("12345", "Toyota Camry", "White")
+    CREATE OBJECT vehicle1 OF Vehicle(
+        "12345",
+        "Toyota Camry",
+        "White"
+    )
 
     CREATE OBJECT driver1 OF Driver(
         "Ahmed",
         "91234567",
         vehicle1
     )
-
-    company1.ADD_DRIVER(driver1)
 
     CREATE OBJECT passenger1 OF Passenger(
         "Sara",
@@ -660,6 +776,11 @@ BEGIN
         "93456789"
     )
 
+    company1.ADD_DRIVER(driver1)
+
+    DISPLAY "Driver vehicle: " + driver1.GET_VEHICLE_MODEL()
+    DISPLAY "Vehicle color: " + driver1.GET_VEHICLE_COLOR()
+
     company1.CREATE_TRIP(
         driver1,
         passenger1,
@@ -667,7 +788,6 @@ BEGIN
         "Airport",
         8
     )
-    // Output: Trip created successfully
 
     company1.CREATE_TRIP(
         driver1,
@@ -676,97 +796,108 @@ BEGIN
         "City Center",
         6
     )
-    // Output: Trip created successfully
 
-    DISPLAY driver1.GET_TRIP_COUNT()
-    // Output: 2
+    SET foundDriver TO company1.FIND_DRIVER_BY_NAME("Ahmed")
+    DISPLAY "Found driver: " + foundDriver.GET_NAME()
 
-    DISPLAY driver1.GET_TOTAL_FARES()
-    // Output: 14
-
+    DISPLAY "Driver trip count: " + driver1.GET_TRIP_COUNT()
+    DISPLAY "Passenger trip count: " + passenger1.GET_TRIP_COUNT()
+    DISPLAY "Total fares: OMR " + driver1.GET_TOTAL_FARES()
 END
 STOP
+
 
 TASK 291: CO-WORKING SPACE
 
 CLASS MembershipPlan
     ATTRIBUTES
-        planName : TEXT
-        monthlyMeetingRoomQuota : NUMBER
+        PRIVATE planName : TEXT
+        PRIVATE monthlyMeetingRoomQuota : NUMBER
 
     CONSTRUCTOR(name : TEXT, quota : NUMBER)
-        SET planName TO name
-        SET monthlyMeetingRoomQuota TO quota
+        SET this.planName TO name
+        SET this.monthlyMeetingRoomQuota TO quota
     END CONSTRUCTOR
 
     METHODS
         GET_PLAN_NAME()
-            RETURN planName
+            RETURN this.planName
         END METHOD
 
         GET_MONTHLY_QUOTA()
-            RETURN monthlyMeetingRoomQuota
+            RETURN this.monthlyMeetingRoomQuota
         END METHOD
 END CLASS
 
 CLASS Booking
     ATTRIBUTES
-        member : Member
-        room : MeetingRoom
-        bookingDate : TEXT
-        startTime : NUMBER
-        endTime : NUMBER
+        PRIVATE member : Member
+        PRIVATE room : MeetingRoom
+        PRIVATE bookingDate : TEXT
+        PRIVATE startTimeHours : NUMBER
+        PRIVATE endTimeHours : NUMBER
 
     CONSTRUCTOR(m : Member, r : MeetingRoom, date : TEXT, start : NUMBER, end : NUMBER)
-        SET member TO m
-        SET room TO r
-        SET bookingDate TO date
-        SET startTime TO start
-        SET endTime TO end
+        SET this.member TO m
+        SET this.room TO r
+        SET this.bookingDate TO date
+        SET this.startTimeHours TO start
+        SET this.endTimeHours TO end
     END CONSTRUCTOR
 
     METHODS
         GET_DATE()
-            RETURN bookingDate
+            RETURN this.bookingDate
         END METHOD
 
         GET_START_TIME()
-            RETURN startTime
+            RETURN this.startTimeHours
         END METHOD
 
         GET_END_TIME()
-            RETURN endTime
+            RETURN this.endTimeHours
         END METHOD
 
-        GET_DURATION()
-            RETURN endTime - startTime
+        GET_DURATION_HOURS()
+            RETURN this.endTimeHours - this.startTimeHours
         END METHOD
 
-        GET_ROOM()
-            RETURN room
+        GET_ROOM_NAME()
+            RETURN this.room.GET_NAME()
         END METHOD
 END CLASS
 
 CLASS MeetingRoom
     ATTRIBUTES
-        roomName : TEXT
-        capacity : NUMBER
-        bookings : LIST<Booking>
+        PRIVATE roomName : TEXT
+        PRIVATE capacity : NUMBER
+        PRIVATE bookings : LIST<Booking>
 
     CONSTRUCTOR(name : TEXT, cap : NUMBER)
-        SET roomName TO name
-        SET capacity TO cap
-        SET bookings TO LIST []
+        SET this.roomName TO name
+
+        IF cap GREATER THAN 0 THEN
+            SET this.capacity TO cap
+        ELSE
+            SET this.capacity TO 1
+            DISPLAY "Invalid capacity: default set to 1"
+        END IF
+
+        SET this.bookings TO LIST []
     END CONSTRUCTOR
 
     METHODS
         GET_NAME()
-            RETURN roomName
+            RETURN this.roomName
+        END METHOD
+
+        GET_CAPACITY()
+            RETURN this.capacity
         END METHOD
 
         IS_AVAILABLE(date : TEXT, start : NUMBER, end : NUMBER)
-            REPEAT FROM I = 1 TO SIZE OF bookings
-                SET B TO bookings[I]
+            REPEAT FROM I = 1 TO SIZE OF this.bookings
+                SET B TO this.bookings[I]
 
                 IF B.GET_DATE() EQUALS date THEN
                     IF start LESS THAN B.GET_END_TIME() AND end GREATER THAN B.GET_START_TIME() THEN
@@ -779,46 +910,50 @@ CLASS MeetingRoom
         END METHOD
 
         ADD_BOOKING(b : Booking)
-            IF IS_AVAILABLE(
-                b.GET_DATE(),
-                b.GET_START_TIME(),
-                b.GET_END_TIME()
-            ) THEN
-                ADD b TO bookings
-                DISPLAY "Room booking added successfully"
-            ELSE
-                DISPLAY "Booking refused: room already booked during this time"
-            END IF
+            ADD b TO this.bookings
+        END METHOD
+
+        DISPLAY_BOOKINGS()
+            REPEAT FROM I = 1 TO SIZE OF this.bookings
+                SET B TO this.bookings[I]
+
+                DISPLAY B.GET_DATE()
+                DISPLAY B.GET_START_TIME() + " to " + B.GET_END_TIME()
+            END REPEAT
         END METHOD
 END CLASS
 
 CLASS Member
     ATTRIBUTES
-        memberName : TEXT
-        phoneNumber : TEXT
-        membershipPlan : MembershipPlan
-        bookings : LIST<Booking>
+        PRIVATE memberName : TEXT
+        PRIVATE phoneNumber : TEXT
+        PRIVATE membershipPlan : MembershipPlan
+        PRIVATE bookings : LIST<Booking>
 
     CONSTRUCTOR(name : TEXT, phone : TEXT, plan : MembershipPlan)
-        SET memberName TO name
-        SET phoneNumber TO phone
-        SET membershipPlan TO plan
-        SET bookings TO LIST []
+        SET this.memberName TO name
+        SET this.phoneNumber TO phone
+        SET this.membershipPlan TO plan
+        SET this.bookings TO LIST []
     END CONSTRUCTOR
 
     METHODS
         GET_NAME()
-            RETURN memberName
+            RETURN this.memberName
+        END METHOD
+
+        EXTRACT_MONTH(date : TEXT)
+            RETURN FIRST 7 CHARACTERS OF date
         END METHOD
 
         GET_USED_HOURS(month : TEXT)
             SET totalHours TO 0
 
-            REPEAT FROM I = 1 TO SIZE OF bookings
-                SET B TO bookings[I]
+            REPEAT FROM I = 1 TO SIZE OF this.bookings
+                SET B TO this.bookings[I]
 
-                IF B.GET_DATE() CONTAINS month THEN
-                    SET totalHours TO totalHours + B.GET_DURATION()
+                IF EXTRACT_MONTH(B.GET_DATE()) EQUALS month THEN
+                    SET totalHours TO totalHours + B.GET_DURATION_HOURS()
                 END IF
             END REPEAT
 
@@ -826,64 +961,81 @@ CLASS Member
         END METHOD
 
         GET_REMAINING_HOURS(month : TEXT)
-            RETURN membershipPlan.GET_MONTHLY_QUOTA() - GET_USED_HOURS(month)
+            RETURN this.membershipPlan.GET_MONTHLY_QUOTA() - GET_USED_HOURS(month)
         END METHOD
 
-        BOOK_ROOM(room : MeetingRoom, date : TEXT, start : NUMBER, end : NUMBER, month : TEXT)
+        BOOK_ROOM(room : MeetingRoom, date : TEXT, start : NUMBER, end : NUMBER, peopleCount : NUMBER)
             SET requestedHours TO end - start
+            SET month TO EXTRACT_MONTH(date)
 
             IF requestedHours LESS THAN OR EQUAL TO 0 THEN
                 DISPLAY "Booking refused: invalid time slot"
             ELSE
-                IF requestedHours GREATER THAN GET_REMAINING_HOURS(month) THEN
-                    DISPLAY "Booking refused: monthly meeting-room quota exceeded"
+                IF peopleCount GREATER THAN room.GET_CAPACITY() THEN
+                    DISPLAY "Booking refused: room capacity exceeded"
                 ELSE
-                    IF NOT room.IS_AVAILABLE(date, start, end) THEN
-                        DISPLAY "Booking refused: room already booked during this time"
+                    IF requestedHours GREATER THAN GET_REMAINING_HOURS(month) THEN
+                        DISPLAY "Booking refused: monthly quota exceeded"
                     ELSE
-                        CREATE OBJECT newBooking OF Booking(
-                            THIS,
-                            room,
-                            date,
-                            start,
-                            end
-                        )
+                        IF NOT room.IS_AVAILABLE(date, start, end) THEN
+                            DISPLAY "Booking refused: room already booked"
+                        ELSE
+                            CREATE OBJECT newBooking OF Booking(
+                                THIS,
+                                room,
+                                date,
+                                start,
+                                end
+                            )
 
-                        ADD newBooking TO bookings
-                        room.ADD_BOOKING(newBooking)
+                            ADD newBooking TO this.bookings
+                            room.ADD_BOOKING(newBooking)
 
-                        DISPLAY "Booking created successfully for " + memberName
+                            DISPLAY "Booking created successfully"
+                        END IF
                     END IF
                 END IF
             END IF
+        END METHOD
+
+        DISPLAY_BOOKINGS()
+            REPEAT FROM I = 1 TO SIZE OF this.bookings
+                SET B TO this.bookings[I]
+
+                DISPLAY "Room: " + B.GET_ROOM_NAME()
+                DISPLAY "Date: " + B.GET_DATE()
+                DISPLAY "Duration: " + B.GET_DURATION_HOURS() + " hours"
+            END REPEAT
         END METHOD
 END CLASS
 
 CLASS CoWorkingSpace
     ATTRIBUTES
-        spaceName : TEXT
-        members : LIST<Member>
-        rooms : LIST<MeetingRoom>
+        PRIVATE spaceName : TEXT
+        PRIVATE members : LIST<Member>
+        PRIVATE rooms : LIST<MeetingRoom>
 
     CONSTRUCTOR(name : TEXT)
-        SET spaceName TO name
-        SET members TO LIST []
-        SET rooms TO LIST []
+        SET this.spaceName TO name
+        SET this.members TO LIST []
+        SET this.rooms TO LIST []
     END CONSTRUCTOR
 
     METHODS
         ADD_MEMBER(m : Member)
-            ADD m TO members
+            ADD m TO this.members
         END METHOD
 
         ADD_ROOM(r : MeetingRoom)
-            ADD r TO rooms
+            ADD r TO this.rooms
         END METHOD
 END CLASS
 
 START
 BEGIN
-    CREATE OBJECT space1 OF CoWorkingSpace("Muscat Work Hub")
+    CREATE OBJECT space1 OF CoWorkingSpace(
+        "Muscat Work Hub"
+    )
 
     CREATE OBJECT standardPlan OF MembershipPlan(
         "Standard",
@@ -900,9 +1052,6 @@ BEGIN
         4
     )
 
-    space1.ADD_ROOM(room1)
-    space1.ADD_ROOM(room2)
-
     CREATE OBJECT member1 OF Member(
         "Ahmed",
         "91234567",
@@ -915,6 +1064,8 @@ BEGIN
         standardPlan
     )
 
+    space1.ADD_ROOM(room1)
+    space1.ADD_ROOM(room2)
     space1.ADD_MEMBER(member1)
     space1.ADD_MEMBER(member2)
 
@@ -923,168 +1074,246 @@ BEGIN
         "2026-07-10",
         9,
         11,
-        "2026-07"
+        5
     )
-    // Output: Room booking added successfully
-    // Output: Booking created successfully for Ahmed
-
-    DISPLAY member1.GET_USED_HOURS("2026-07")
-    // Output: 2
-
-    DISPLAY member1.GET_REMAINING_HOURS("2026-07")
-    // Output: 3
 
     member2.BOOK_ROOM(
         room1,
         "2026-07-10",
         10,
         12,
-        "2026-07"
+        4
     )
-    // Output: Booking refused: room already booked during this time
 
     member1.BOOK_ROOM(
         room2,
         "2026-07-12",
         9,
         13,
-        "2026-07"
+        3
     )
-    // Output: Booking refused: monthly meeting-room quota exceeded
 
     member1.BOOK_ROOM(
         room2,
         "2026-07-12",
         9,
         12,
-        "2026-07"
+        3
     )
-    // Output: Room booking added successfully
-    // Output: Booking created successfully for Ahmed
 
-    DISPLAY member1.GET_USED_HOURS("2026-07")
-    // Output: 5
+    DISPLAY "Used hours: " + member1.GET_USED_HOURS("2026-07")
+    DISPLAY "Remaining hours: " + member1.GET_REMAINING_HOURS("2026-07")
 
-    DISPLAY member1.GET_REMAINING_HOURS("2026-07")
-    // Output: 0
-
+    member1.DISPLAY_BOOKINGS()
+    room1.DISPLAY_BOOKINGS()
 END
 STOP
 
 
-
-TASK 292: Personal Trainer Bookings
+TASK 292: PERSONAL TRAINER BOOKINGS
 
 CLASS Client
     ATTRIBUTES
-        clientName : TEXT
-        phoneNumber : TEXT
-        emailAddress : TEXT
-        sessions : LIST<FitnessSession>
+        PRIVATE clientName : TEXT
+        PRIVATE phoneNumber : TEXT
+        PRIVATE emailAddress : TEXT
+        PRIVATE sessions : LIST<FitnessSession>
 
     CONSTRUCTOR(name : TEXT, phone : TEXT, email : TEXT)
-        SET clientName TO name
-        SET phoneNumber TO phone
-        SET emailAddress TO email
-        SET sessions TO LIST []
+        SET this.clientName TO name
+        SET this.phoneNumber TO phone
+        SET this.emailAddress TO email
+        SET this.sessions TO LIST []
     END CONSTRUCTOR
 
     METHODS
         GET_NAME()
-            RETURN clientName
+            RETURN this.clientName
         END METHOD
 
         ADD_SESSION(s : FitnessSession)
-            ADD s TO sessions
+            ADD s TO this.sessions
+        END METHOD
+
+        REMOVE_SESSION(s : FitnessSession)
+            REMOVE s FROM this.sessions
         END METHOD
 
         GET_SESSION_COUNT()
-            RETURN SIZE OF sessions
+            RETURN SIZE OF this.sessions
         END METHOD
 END CLASS
 
 CLASS FitnessSession
     ATTRIBUTES
-        client : Client
-        sessionDate : TEXT
-        sessionTime : TEXT
-        duration : NUMBER
-        workoutType : TEXT
+        PRIVATE client : Client
+        PRIVATE sessionDate : TEXT
+        PRIVATE startTime : NUMBER
+        PRIVATE durationMinutes : NUMBER
+        PRIVATE workoutType : TEXT
 
-    CONSTRUCTOR(c : Client, date : TEXT, time : TEXT, d : NUMBER, type : TEXT)
-        SET client TO c
-        SET sessionDate TO date
-        SET sessionTime TO time
-        SET duration TO d
-        SET workoutType TO type
+    CONSTRUCTOR(c : Client, date : TEXT, time : NUMBER, duration : NUMBER, type : TEXT)
+        SET this.client TO c
+        SET this.sessionDate TO date
+        SET this.startTime TO time
+        SET this.durationMinutes TO duration
+        SET this.workoutType TO type
     END CONSTRUCTOR
 
     METHODS
         GET_CLIENT()
-            RETURN client
+            RETURN this.client
         END METHOD
 
         GET_DATE()
-            RETURN sessionDate
+            RETURN this.sessionDate
         END METHOD
 
-        GET_TIME()
-            RETURN sessionTime
+        GET_START_TIME()
+            RETURN this.startTime
+        END METHOD
+
+        GET_END_TIME()
+            RETURN this.startTime + this.durationMinutes
         END METHOD
 
         GET_DURATION()
-            RETURN duration
+            RETURN this.durationMinutes
         END METHOD
 
         GET_WORKOUT_TYPE()
-            RETURN workoutType
+            RETURN this.workoutType
+        END METHOD
+
+        RESCHEDULE(newDate : TEXT, newTime : NUMBER)
+            SET this.sessionDate TO newDate
+            SET this.startTime TO newTime
         END METHOD
 END CLASS
 
 CLASS PersonalTrainer
     ATTRIBUTES
-        trainerName : TEXT
-        specialty : TEXT
-        bookedSessions : LIST<FitnessSession>
+        PRIVATE trainerName : TEXT
+        PRIVATE specialties : LIST<TEXT>
+        PRIVATE bookedSessions : LIST<FitnessSession>
 
-    CONSTRUCTOR(name : TEXT, spec : TEXT)
-        SET trainerName TO name
-        SET specialty TO spec
-        SET bookedSessions TO LIST []
+    CONSTRUCTOR(name : TEXT)
+        SET this.trainerName TO name
+        SET this.specialties TO LIST []
+        SET this.bookedSessions TO LIST []
     END CONSTRUCTOR
 
     METHODS
         GET_NAME()
-            RETURN trainerName
+            RETURN this.trainerName
         END METHOD
 
-        BOOK_SESSION(client : Client, date : TEXT, time : TEXT, duration : NUMBER, type : TEXT)
-            CREATE OBJECT newSession OF FitnessSession(
-                client,
-                date,
-                time,
-                duration,
-                type
-            )
+        ADD_SPECIALTY(type : TEXT)
+            ADD type TO this.specialties
+        END METHOD
 
-            ADD newSession TO bookedSessions
-            client.ADD_SESSION(newSession)
+        HAS_SPECIALTY(type : TEXT)
+            REPEAT FROM I = 1 TO SIZE OF this.specialties
+                IF this.specialties[I] EQUALS type THEN
+                    RETURN TRUE
+                END IF
+            END REPEAT
 
-            DISPLAY "Session booked successfully"
-            DISPLAY client.GET_NAME() + " booked " + type
+            RETURN FALSE
+        END METHOD
+
+        IS_AVAILABLE(date : TEXT, start : NUMBER, duration : NUMBER)
+            SET requestedEnd TO start + duration
+
+            REPEAT FROM I = 1 TO SIZE OF this.bookedSessions
+                SET S TO this.bookedSessions[I]
+
+                IF S.GET_DATE() EQUALS date THEN
+                    IF start LESS THAN S.GET_END_TIME() AND requestedEnd GREATER THAN S.GET_START_TIME() THEN
+                        RETURN FALSE
+                    END IF
+                END IF
+            END REPEAT
+
+            RETURN TRUE
+        END METHOD
+
+        BOOK_SESSION(client : Client, date : TEXT, time : NUMBER, duration : NUMBER, type : TEXT)
+            IF date EQUALS "" THEN
+                DISPLAY "Booking refused: date cannot be empty"
+            ELSE
+                IF duration LESS THAN OR EQUAL TO 0 THEN
+                    DISPLAY "Booking refused: duration must be greater than zero"
+                ELSE
+                    IF NOT HAS_SPECIALTY(type) THEN
+                        DISPLAY "Booking refused: workout is outside trainer specialty"
+                    ELSE
+                        IF NOT IS_AVAILABLE(date, time, duration) THEN
+                            DISPLAY "Booking refused: trainer is already booked"
+                        ELSE
+                            CREATE OBJECT newSession OF FitnessSession(
+                                client,
+                                date,
+                                time,
+                                duration,
+                                type
+                            )
+
+                            ADD newSession TO this.bookedSessions
+                            client.ADD_SESSION(newSession)
+
+                            DISPLAY "Session booked successfully"
+                        END IF
+                    END IF
+                END IF
+            END IF
+        END METHOD
+
+        CANCEL_SESSION(session : FitnessSession)
+            REMOVE session FROM this.bookedSessions
+            session.GET_CLIENT().REMOVE_SESSION(session)
+            DISPLAY "Session cancelled successfully"
+        END METHOD
+
+        RESCHEDULE_SESSION(session : FitnessSession, newDate : TEXT, newTime : NUMBER)
+            IF IS_AVAILABLE(
+                newDate,
+                newTime,
+                session.GET_DURATION()
+            ) THEN
+                session.RESCHEDULE(newDate, newTime)
+                DISPLAY "Session rescheduled successfully"
+            ELSE
+                DISPLAY "Reschedule refused: trainer is unavailable"
+            END IF
+        END METHOD
+
+        DISPLAY_SCHEDULE_BY_DATE(date : TEXT)
+            REPEAT FROM I = 1 TO SIZE OF this.bookedSessions
+                SET S TO this.bookedSessions[I]
+
+                IF S.GET_DATE() EQUALS date THEN
+                    DISPLAY "Client: " + S.GET_CLIENT().GET_NAME()
+                    DISPLAY "Time: " + S.GET_START_TIME()
+                    DISPLAY "Workout: " + S.GET_WORKOUT_TYPE()
+                END IF
+            END REPEAT
         END METHOD
 
         GET_TOTAL_SESSION_COUNT()
-            RETURN SIZE OF bookedSessions
+            RETURN SIZE OF this.bookedSessions
         END METHOD
 END CLASS
 
 START
 BEGIN
     CREATE OBJECT trainer1 OF PersonalTrainer(
-        "Coach Ali",
-        "Strength and Conditioning"
+        "Coach Ali"
     )
+
+    trainer1.ADD_SPECIALTY("Strength Training")
+    trainer1.ADD_SPECIALTY("Cardio")
+    trainer1.ADD_SPECIALTY("Weight Loss Training")
 
     CREATE OBJECT client1 OF Client(
         "Ahmed",
@@ -1101,41 +1330,31 @@ BEGIN
     trainer1.BOOK_SESSION(
         client1,
         "2026-07-15",
-        "09:00",
+        540,
         60,
         "Strength Training"
     )
-    // Output: Session booked successfully
-    // Output: Ahmed booked Strength Training
-
-    trainer1.BOOK_SESSION(
-        client1,
-        "2026-07-18",
-        "10:00",
-        45,
-        "Cardio"
-    )
-    // Output: Session booked successfully
-    // Output: Ahmed booked Cardio
 
     trainer1.BOOK_SESSION(
         client2,
-        "2026-07-16",
-        "11:00",
+        "2026-07-15",
+        570,
+        60,
+        "Cardio"
+    )
+
+    trainer1.BOOK_SESSION(
+        client2,
+        "2026-07-15",
+        660,
         60,
         "Weight Loss Training"
     )
-    // Output: Session booked successfully
-    // Output: Sara booked Weight Loss Training
 
-    DISPLAY client1.GET_SESSION_COUNT()
-    // Output: 2
+    DISPLAY "Ahmed session count: " + client1.GET_SESSION_COUNT()
+    DISPLAY "Sara session count: " + client2.GET_SESSION_COUNT()
+    DISPLAY "Trainer session count: " + trainer1.GET_TOTAL_SESSION_COUNT()
 
-    DISPLAY client2.GET_SESSION_COUNT()
-    // Output: 1
-
-    DISPLAY trainer1.GET_TOTAL_SESSION_COUNT()
-    // Output: 3
-
+    trainer1.DISPLAY_SCHEDULE_BY_DATE("2026-07-15")
 END
 STOP
