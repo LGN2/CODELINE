@@ -328,12 +328,12 @@ END CLASS
 
 CLASS Payroll
     ATTRIBUTES
-        companyName : TEXT
-        employees : LIST<Employee>
+        PRIVATE companyName : TEXT
+        PRIVATE employees : LIST<Employee>
 
     CONSTRUCTOR(name : TEXT)
-        SET companyName TO name
-        SET employees TO LIST []
+        SET this.companyName TO name
+        SET this.employees TO LIST []
     END CONSTRUCTOR
 
     METHODS
