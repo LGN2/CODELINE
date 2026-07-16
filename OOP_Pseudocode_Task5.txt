@@ -36,7 +36,7 @@ END CLASS
 
 CLASS Circle INHERITS Shape
     ATTRIBUTES
-        radius : NUMBER
+        PRIVATE radius : NUMBER
 
     CONSTRUCTOR(c : TEXT, x : NUMBER, y : NUMBER, r : NUMBER)
         CALL Shape.CONSTRUCTOR(c, x, y)
@@ -55,13 +55,13 @@ END CLASS
 
 CLASS Rectangle INHERITS Shape
     ATTRIBUTES
-        width : NUMBER
-        height : NUMBER
+        PRIVATE width : NUMBER
+        PRIVATE height : NUMBER
 
     CONSTRUCTOR(c : TEXT, x : NUMBER, y : NUMBER, w : NUMBER, h : NUMBER)
         CALL Shape.CONSTRUCTOR(c, x, y)
-        SET width TO w
-        SET height TO h
+        SET this.width TO w
+        SET this.height TO h
     END CONSTRUCTOR
 
     METHODS
