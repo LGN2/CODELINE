@@ -485,11 +485,11 @@ END CLASS
 
 CLASS Fish INHERITS Animal
     ATTRIBUTES
-        hasGills : BOOLEAN
+        PRIVATE hasGills : BOOLEAN
 
     CONSTRUCTOR(name : TEXT, a : NUMBER, diet : TEXT)
         CALL Animal.CONSTRUCTOR(name, a, diet)
-        SET hasGills TO TRUE
+        SET this.hasGills TO TRUE
     END CONSTRUCTOR
 
     METHODS
@@ -504,13 +504,13 @@ END CLASS
 
 CLASS Mammal INHERITS Animal
     ATTRIBUTES
-        hasFur : BOOLEAN
-        givesLiveBirth : BOOLEAN
+        PRIVATE hasFur : BOOLEAN
+        PRIVATE givesLiveBirth : BOOLEAN
 
     CONSTRUCTOR(name : TEXT, a : NUMBER, diet : TEXT, fur : BOOLEAN)
         CALL Animal.CONSTRUCTOR(name, a, diet)
-        SET hasFur TO fur
-        SET givesLiveBirth TO TRUE
+        SET this.hasFur TO fur
+        SET this.givesLiveBirth TO TRUE
     END CONSTRUCTOR
 
     METHODS
@@ -525,14 +525,14 @@ END CLASS
 
 CLASS Enclosure
     ATTRIBUTES
-        enclosureName : TEXT
-        temperature : NUMBER
-        animals : LIST<Animal>
+        PRIVATE enclosureName : TEXT
+        PRIVATE temperature : NUMBER
+        PRIVATE animals : LIST<Animal>
 
     CONSTRUCTOR(name : TEXT, temp : NUMBER)
-        SET enclosureName TO name
-        SET temperature TO temp
-        SET animals TO LIST []
+        SET this.enclosureName TO name
+        SET this.temperature TO temp
+        SET this.animals TO LIST []
     END CONSTRUCTOR
 
     METHODS
