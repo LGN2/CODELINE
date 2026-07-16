@@ -430,14 +430,14 @@ TASK 295
 
 CLASS Animal
     ATTRIBUTES
-        animalName : TEXT
-        age : NUMBER
-        dietType : TEXT
+        PRIVATE animalName : TEXT
+        PRIVATE age : NUMBER
+        PRIVATE dietType : TEXT
 
     CONSTRUCTOR(name : TEXT, a : NUMBER, diet : TEXT)
-        SET animalName TO name
-        SET age TO a
-        SET dietType TO diet
+        SET this.animalName TO name
+        SET this.age TO a
+        SET this.dietType TO diet
     END CONSTRUCTOR
 
     METHODS
