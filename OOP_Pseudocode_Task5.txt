@@ -261,11 +261,11 @@ END CLASS
 
 CLASS SalariedEmployee INHERITS Employee
     ATTRIBUTES
-        monthlySalary : NUMBER
+        PRIVATE monthlySalary : NUMBER
 
     CONSTRUCTOR(name : TEXT, id : TEXT, date : TEXT, salary : NUMBER)
         CALL Employee.CONSTRUCTOR(name, id, date)
-        SET monthlySalary TO salary
+        SET this.monthlySalary TO salary
     END CONSTRUCTOR
 
     METHODS
@@ -276,13 +276,13 @@ END CLASS
 
 CLASS HourlyEmployee INHERITS Employee
     ATTRIBUTES
-        hourlyRate : NUMBER
-        hoursWorked : NUMBER
+        PRIVATE hourlyRate : NUMBER
+        PRIVATE hoursWorked : NUMBER
 
     CONSTRUCTOR(name : TEXT, id : TEXT, date : TEXT, rate : NUMBER)
         CALL Employee.CONSTRUCTOR(name, id, date)
-        SET hourlyRate TO rate
-        SET hoursWorked TO 0
+        SET this.hourlyRate TO rate
+        SET this.hoursWorked TO 0
     END CONSTRUCTOR
 
     METHODS
