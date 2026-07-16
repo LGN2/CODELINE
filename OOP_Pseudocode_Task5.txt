@@ -231,14 +231,14 @@ TASK 294
 
 CLASS Employee
     ATTRIBUTES
-        employeeName : TEXT
-        employeeID : TEXT
-        hireDate : TEXT
+        PRIVATE employeeName : TEXT
+        PRIVATE employeeID : TEXT
+        PRIVATE hireDate : TEXT
 
     CONSTRUCTOR(name : TEXT, id : TEXT, date : TEXT)
-        SET employeeName TO name
-        SET employeeID TO id
-        SET hireDate TO date
+        SET this.employeeName TO name
+        SET this.employeeID TO id
+        SET this.hireDate TO date
     END CONSTRUCTOR
 
     METHODS
