@@ -301,15 +301,15 @@ END CLASS
 
 CLASS CommissionEmployee INHERITS Employee
     ATTRIBUTES
-        basePay : NUMBER
-        commissionRate : NUMBER
-        monthlySales : NUMBER
+        PRIVATE basePay : NUMBER
+        PRIVATE commissionRate : NUMBER
+        PRIVATE monthlySales : NUMBER
 
     CONSTRUCTOR(name : TEXT, id : TEXT, date : TEXT, base : NUMBER, rate : NUMBER)
         CALL Employee.CONSTRUCTOR(name, id, date)
-        SET basePay TO base
-        SET commissionRate TO rate
-        SET monthlySales TO 0
+        SET this.basePay TO base
+        SET this.commissionRate TO rate
+        SET this.monthlySales TO 0
     END CONSTRUCTOR
 
     METHODS
