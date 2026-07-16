@@ -2,14 +2,14 @@ TASK 293
 
 CLASS Shape
     ATTRIBUTES
-        color : TEXT
-        positionX : NUMBER
-        positionY : NUMBER
+        PRIVATE color : TEXT
+        PRIVATE positionX : NUMBER
+        PRIVATE positionY : NUMBER
 
     CONSTRUCTOR(c : TEXT, x : NUMBER, y : NUMBER)
-        SET color TO c
-        SET positionX TO x
-        SET positionY TO y
+        SET this.color TO c
+        SET this.positionX TO x
+        SET this.positionY TO y
     END CONSTRUCTOR
 
     METHODS
