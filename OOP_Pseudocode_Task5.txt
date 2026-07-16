@@ -40,7 +40,7 @@ CLASS Circle INHERITS Shape
 
     CONSTRUCTOR(c : TEXT, x : NUMBER, y : NUMBER, r : NUMBER)
         CALL Shape.CONSTRUCTOR(c, x, y)
-        SET radius TO r
+        SET this.radius TO r
     END CONSTRUCTOR
 
     METHODS
@@ -76,15 +76,15 @@ END CLASS
 
 CLASS Triangle INHERITS Shape
     ATTRIBUTES
-        sideA : NUMBER
-        sideB : NUMBER
-        sideC : NUMBER
+        PRIVATE sideA : NUMBER
+        PRIVATE sideB : NUMBER
+        PRIVATE sideC : NUMBER
 
     CONSTRUCTOR(c : TEXT, x : NUMBER, y : NUMBER, a : NUMBER, b : NUMBER, side : NUMBER)
         CALL Shape.CONSTRUCTOR(c, x, y)
-        SET sideA TO a
-        SET sideB TO b
-        SET sideC TO side
+        SET this.sideA TO a
+        SET this.sideB TO b
+        SET this.sideC TO side
     END CONSTRUCTOR
 
     METHODS
@@ -106,12 +106,12 @@ END CLASS
 
 CLASS Canvas
     ATTRIBUTES
-        canvasName : TEXT
-        shapes : LIST<Shape>
+        PRIVATE canvasName : TEXT
+        PRIVATE shapes : LIST<Shape>
 
     CONSTRUCTOR(name : TEXT)
-        SET canvasName TO name
-        SET shapes TO LIST []
+        SET this.canvasName TO name
+        SET this.shapes TO LIST []
     END CONSTRUCTOR
 
     METHODS
