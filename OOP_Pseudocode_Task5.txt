@@ -464,13 +464,13 @@ END CLASS
 
 CLASS Bird INHERITS Animal
     ATTRIBUTES
-        canFly : BOOLEAN
-        laysEggs : BOOLEAN
+        PRIVATE canFly : BOOLEAN
+        PRIVATE laysEggs : BOOLEAN
 
     CONSTRUCTOR(name : TEXT, a : NUMBER, diet : TEXT, fly : BOOLEAN)
         CALL Animal.CONSTRUCTOR(name, a, diet)
-        SET canFly TO fly
-        SET laysEggs TO TRUE
+        SET this.canFly TO fly
+        SET this.laysEggs TO TRUE
     END CONSTRUCTOR
 
     METHODS
