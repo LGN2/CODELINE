@@ -1386,8 +1386,8 @@ CLASS Van INHERITS Vehicle
 
     CONSTRUCTOR(plate : TEXT, fuel : NUMBER, e : Engine, capacity : NUMBER, speed : NUMBER)
         CALL Vehicle.CONSTRUCTOR(plate, fuel, e)
-        SET cargoCapacity TO capacity
-        SET averageCitySpeed TO speed
+        SET this.cargoCapacity TO capacity
+        SET this.averageCitySpeed TO speed
     END CONSTRUCTOR
 
     METHODS
