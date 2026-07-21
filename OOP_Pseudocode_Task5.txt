@@ -1381,8 +1381,8 @@ END CLASS
 
 CLASS Van INHERITS Vehicle
     ATTRIBUTES
-        cargoCapacity : NUMBER
-        averageCitySpeed : NUMBER
+        PRIVATE cargoCapacity : NUMBER
+        PRIVATE averageCitySpeed : NUMBER
 
     CONSTRUCTOR(plate : TEXT, fuel : NUMBER, e : Engine, capacity : NUMBER, speed : NUMBER)
         CALL Vehicle.CONSTRUCTOR(plate, fuel, e)
