@@ -959,9 +959,9 @@ TASK 297
 
 CLASS Subscription
     ATTRIBUTES
-        startDate : TEXT
-        monthlyPrice : NUMBER
-        endDate : TEXT
+        PRIVATE startDate : TEXT
+        PRIVATE monthlyPrice : NUMBER
+        PRIVATE endDate : TEXT
 
     CONSTRUCTOR(start : TEXT, price : NUMBER, end : TEXT)
         SET startDate TO start
