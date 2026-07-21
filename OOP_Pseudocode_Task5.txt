@@ -750,9 +750,9 @@ CLASS OrderItem
         PRIVATE quantity : NUMBER
 
     CONSTRUCTOR(name : TEXT, price : NUMBER, qty : NUMBER)
-        SET itemName TO name
-        SET unitPrice TO price
-        SET quantity TO qty
+        SET this.itemName TO name
+        SET this.unitPrice TO price
+        SET this.quantity TO qty
     END CONSTRUCTOR
 
     METHODS
