@@ -1247,8 +1247,8 @@ CLASS Engine
         PRIVATE fuelEfficiency : NUMBER
 
     CONSTRUCTOR(hp : NUMBER, efficiency : NUMBER)
-        SET horsepower TO hp
-        SET fuelEfficiency TO efficiency
+        SET this.horsepower TO hp
+        SET this.fuelEfficiency TO efficiency
     END CONSTRUCTOR
 
     METHODS
