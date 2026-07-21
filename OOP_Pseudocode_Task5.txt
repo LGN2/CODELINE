@@ -1263,9 +1263,9 @@ END CLASS
 
 CLASS Package
     ATTRIBUTES
-        packageID : TEXT
-        description : TEXT
-        weight : NUMBER
+        PRIVATE packageID : TEXT
+        PRIVATE description : TEXT
+        PRIVATE weight : NUMBER
 
     CONSTRUCTOR(id : TEXT, desc : TEXT, w : NUMBER)
         SET packageID TO id
