@@ -1138,8 +1138,8 @@ CLASS StreamingService
         PRIVATE userAccounts : LIST<UserAccount>
 
     CONSTRUCTOR(name : TEXT)
-        SET serviceName TO name
-        SET userAccounts TO LIST []
+        SET this.serviceName TO name
+        SET this.userAccounts TO LIST []
     END CONSTRUCTOR
 
     METHODS
