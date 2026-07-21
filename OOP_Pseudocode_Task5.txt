@@ -856,8 +856,8 @@ CLASS OnlineStore
         PRIVATE orders : LIST<Order>
 
     CONSTRUCTOR(name : TEXT)
-        SET storeName TO name
-        SET orders TO LIST []
+        SET this.storeName TO name
+        SET this.orders TO LIST []
     END CONSTRUCTOR
 
     METHODS
