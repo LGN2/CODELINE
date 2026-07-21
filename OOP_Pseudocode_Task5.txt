@@ -718,8 +718,8 @@ END CLASS
 
 CLASS WalletPayment INHERITS PaymentMethod
     ATTRIBUTES
-        walletName : TEXT
-        walletBalance : NUMBER
+        PRIVATE walletName : TEXT
+        PRIVATE walletBalance : NUMBER
 
     CONSTRUCTOR(a : NUMBER, name : TEXT, balance : NUMBER)
         CALL PaymentMethod.CONSTRUCTOR(a)
