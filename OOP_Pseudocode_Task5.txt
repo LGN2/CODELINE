@@ -772,9 +772,9 @@ CLASS Order
         PRIVATE payment : PaymentMethod
 
     CONSTRUCTOR(number : TEXT)
-        SET orderNumber TO number
-        SET items TO LIST []
-        SET payment TO NULL
+        SET this.orderNumber TO number
+        SET this.items TO LIST []
+        SET this.payment TO NULL
     END CONSTRUCTOR
 
     METHODS
