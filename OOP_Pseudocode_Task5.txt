@@ -1080,10 +1080,10 @@ CLASS UserAccount
         PRIVATE watchHistory : LIST<WatchRecord>
 
     CONSTRUCTOR(name : TEXT, email : TEXT, sub : Subscription)
-        SET userName TO name
-        SET emailAddress TO email
-        SET subscription TO sub
-        SET watchHistory TO LIST []
+        SET this.userName TO name
+        SET this.emailAddress TO email
+        SET this.subscription TO sub
+        SET this.watchHistory TO LIST []
     END CONSTRUCTOR
 
     METHODS
