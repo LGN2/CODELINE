@@ -1649,10 +1649,10 @@ CLASS Purchase
         PRIVATE isPaid : BOOLEAN
 
     CONSTRUCTOR(description : TEXT, a : NUMBER, date : TEXT)
-        SET purchaseDescription TO description
-        SET amount TO a
-        SET purchaseDate TO date
-        SET isPaid TO FALSE
+        SET this.purchaseDescription TO description
+        SET this.amount TO a
+        SET this.purchaseDate TO date
+        SET this.isPaid TO FALSE
     END CONSTRUCTOR
 
     METHODS
