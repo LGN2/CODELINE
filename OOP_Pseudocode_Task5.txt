@@ -1718,8 +1718,8 @@ CLASS DebitCard INHERITS Card
 
     CONSTRUCTOR(number : TEXT, expiry : TEXT, securityData : TEXT, account : BankAccount)
         CALL Card.CONSTRUCTOR(number, expiry, securityData)
-        SET linkedAccount TO account
-        SET purchases TO LIST []
+        SET this.linkedAccount TO account
+        SET this.purchases TO LIST []
     END CONSTRUCTOR
 
     METHODS
