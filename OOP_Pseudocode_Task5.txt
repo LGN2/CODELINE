@@ -1753,8 +1753,8 @@ END CLASS
 
 CLASS CreditCard INHERITS Card
     ATTRIBUTES
-        creditLimit : NUMBER
-        purchases : LIST<Purchase>
+        PRIVATE creditLimit : NUMBER
+        PRIVATE purchases : LIST<Purchase>
 
     CONSTRUCTOR(number : TEXT, expiry : TEXT, securityData : TEXT, limit : NUMBER)
         CALL Card.CONSTRUCTOR(number, expiry, securityData)
