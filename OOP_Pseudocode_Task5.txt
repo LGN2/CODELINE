@@ -1411,8 +1411,8 @@ CLASS Motorbike INHERITS Vehicle
 
     CONSTRUCTOR(plate : TEXT, fuel : NUMBER, e : Engine, maxWeight : NUMBER, speed : NUMBER)
         CALL Vehicle.CONSTRUCTOR(plate, fuel, e)
-        SET maximumPackageWeight TO maxWeight
-        SET averageSpeed TO speed
+        SET this.maximumPackageWeight TO maxWeight
+        SET this.averageSpeed TO speed
     END CONSTRUCTOR
 
     METHODS
