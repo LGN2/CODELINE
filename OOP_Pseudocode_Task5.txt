@@ -1243,8 +1243,8 @@ TASK 298
 
 CLASS Engine
     ATTRIBUTES
-        horsepower : NUMBER
-        fuelEfficiency : NUMBER
+        PRIVATE horsepower : NUMBER
+        PRIVATE fuelEfficiency : NUMBER
 
     CONSTRUCTOR(hp : NUMBER, efficiency : NUMBER)
         SET horsepower TO hp
