@@ -767,9 +767,9 @@ END CLASS
 
 CLASS Order
     ATTRIBUTES
-        orderNumber : TEXT
-        items : LIST<OrderItem>
-        payment : PaymentMethod
+        PRIVATE orderNumber : TEXT
+        PRIVATE items : LIST<OrderItem>
+        PRIVATE payment : PaymentMethod
 
     CONSTRUCTOR(number : TEXT)
         SET orderNumber TO number
