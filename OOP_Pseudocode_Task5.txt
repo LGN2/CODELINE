@@ -1134,8 +1134,8 @@ END CLASS
 
 CLASS StreamingService
     ATTRIBUTES
-        serviceName : TEXT
-        userAccounts : LIST<UserAccount>
+        PRIVATE serviceName : TEXT
+        PRIVATE userAccounts : LIST<UserAccount>
 
     CONSTRUCTOR(name : TEXT)
         SET serviceName TO name
