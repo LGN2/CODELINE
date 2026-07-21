@@ -1285,8 +1285,8 @@ END CLASS
 
 CLASS Stop
     ATTRIBUTES
-        address : TEXT
-        package : Package
+        PRIVATE address : TEXT
+        PRIVATE package : Package
 
     CONSTRUCTOR(a : TEXT, p : Package)
         SET address TO a
