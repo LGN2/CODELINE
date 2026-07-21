@@ -1677,9 +1677,9 @@ CLASS Card
         PRIVATE chip : Chip
 
     CONSTRUCTOR(number : TEXT, expiry : TEXT, securityData : TEXT)
-        SET cardNumber TO number
-        SET expiryDate TO expiry
-        SET status TO "Active"
+        SET this.cardNumber TO number
+        SET this.expiryDate TO expiry
+        SET this.status TO "Active"
         CREATE OBJECT chip OF Chip(securityData)
     END CONSTRUCTOR
 
