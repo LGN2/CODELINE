@@ -723,8 +723,8 @@ CLASS WalletPayment INHERITS PaymentMethod
 
     CONSTRUCTOR(a : NUMBER, name : TEXT, balance : NUMBER)
         CALL PaymentMethod.CONSTRUCTOR(a)
-        SET walletName TO name
-        SET walletBalance TO balance
+        SET this.walletName TO name
+        SET this.walletBalance TO balance
     END CONSTRUCTOR
 
     METHODS
