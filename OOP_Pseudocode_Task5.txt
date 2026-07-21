@@ -1268,9 +1268,9 @@ CLASS Package
         PRIVATE weight : NUMBER
 
     CONSTRUCTOR(id : TEXT, desc : TEXT, w : NUMBER)
-        SET packageID TO id
-        SET description TO desc
-        SET weight TO w
+        SET this.packageID TO id
+        SET this.description TO desc
+        SET this.weight TO w
     END CONSTRUCTOR
 
     METHODS
