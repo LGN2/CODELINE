@@ -1619,8 +1619,8 @@ END CLASS
 
 CLASS BankAccount
     ATTRIBUTES
-        accountNumber : TEXT
-        availableBalance : NUMBER
+        PRIVATE accountNumber : TEXT
+        PRIVATE availableBalance : NUMBER
 
     CONSTRUCTOR(number : TEXT, balance : NUMBER)
         SET accountNumber TO number
