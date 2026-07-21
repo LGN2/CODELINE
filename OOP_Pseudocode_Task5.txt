@@ -1758,8 +1758,8 @@ CLASS CreditCard INHERITS Card
 
     CONSTRUCTOR(number : TEXT, expiry : TEXT, securityData : TEXT, limit : NUMBER)
         CALL Card.CONSTRUCTOR(number, expiry, securityData)
-        SET creditLimit TO limit
-        SET purchases TO LIST []
+        SET this.creditLimit TO limit
+        SET this.purchases TO LIST []
     END CONSTRUCTOR
 
     METHODS
