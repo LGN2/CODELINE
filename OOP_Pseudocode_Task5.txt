@@ -1643,10 +1643,10 @@ END CLASS
 
 CLASS Purchase
     ATTRIBUTES
-        purchaseDescription : TEXT
-        amount : NUMBER
-        purchaseDate : TEXT
-        isPaid : BOOLEAN
+        PRIVATE purchaseDescription : TEXT
+        PRIVATE amount : NUMBER
+        PRIVATE purchaseDate : TEXT
+        PRIVATE isPaid : BOOLEAN
 
     CONSTRUCTOR(description : TEXT, a : NUMBER, date : TEXT)
         SET purchaseDescription TO description
