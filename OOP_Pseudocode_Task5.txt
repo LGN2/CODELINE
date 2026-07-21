@@ -1623,8 +1623,8 @@ CLASS BankAccount
         PRIVATE availableBalance : NUMBER
 
     CONSTRUCTOR(number : TEXT, balance : NUMBER)
-        SET accountNumber TO number
-        SET availableBalance TO balance
+        SET this.accountNumber TO number
+        SET this.availableBalance TO balance
     END CONSTRUCTOR
 
     METHODS
