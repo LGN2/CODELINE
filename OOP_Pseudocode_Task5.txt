@@ -1289,8 +1289,8 @@ CLASS Stop
         PRIVATE package : Package
 
     CONSTRUCTOR(a : TEXT, p : Package)
-        SET address TO a
-        SET package TO p
+        SET this.address TO a
+        SET this.package TO p
     END CONSTRUCTOR
 
     METHODS
@@ -1305,9 +1305,9 @@ END CLASS
 
 CLASS Route
     ATTRIBUTES
-        routeName : TEXT
-        distance : NUMBER
-        stops : LIST<Stop>
+        PRIVATE routeName : TEXT
+        PRIVATE distance : NUMBER
+        PRIVATE stops : LIST<Stop>
 
     CONSTRUCTOR(name : TEXT, d : NUMBER)
         SET routeName TO name
