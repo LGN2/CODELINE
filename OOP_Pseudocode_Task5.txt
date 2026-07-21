@@ -1601,7 +1601,7 @@ TASK 299
 
 CLASS Chip
     ATTRIBUTES
-        encryptedSecurityData : TEXT
+        PRIVATE encryptedSecurityData : TEXT
 
     CONSTRUCTOR(data : TEXT)
         SET encryptedSecurityData TO data
