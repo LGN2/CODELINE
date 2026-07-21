@@ -975,7 +975,7 @@ CLASS Subscription
         END METHOD
 
         IS_ACTIVE(currentDate : TEXT)
-            IF currentDate GREATER THAN OR EQUAL TO startDate AND currentDate LESS THAN OR EQUAL TO endDate THEN
+            IF currentDate >= startDate AND currentDate <= endDate THEN
                 RETURN TRUE
             ELSE
                 RETURN FALSE
