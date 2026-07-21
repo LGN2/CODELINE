@@ -745,9 +745,9 @@ END CLASS
 
 CLASS OrderItem
     ATTRIBUTES
-        itemName : TEXT
-        unitPrice : NUMBER
-        quantity : NUMBER
+        PRIVATE itemName : TEXT
+        PRIVATE unitPrice : NUMBER
+        PRIVATE quantity : NUMBER
 
     CONSTRUCTOR(name : TEXT, price : NUMBER, qty : NUMBER)
         SET itemName TO name
