@@ -1818,9 +1818,9 @@ CLASS Bank
         PRIVATE accounts : LIST<BankAccount>
 
     CONSTRUCTOR(name : TEXT)
-        SET bankName TO name
-        SET cards TO LIST []
-        SET accounts TO LIST []
+        SET this.bankName TO name
+        SET this.cards TO LIST []
+        SET this.accounts TO LIST []
     END CONSTRUCTOR
 
     METHODS
