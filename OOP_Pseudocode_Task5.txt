@@ -650,8 +650,8 @@ END CLASS
 
 CLASS CreditCardPayment INHERITS PaymentMethod
     ATTRIBUTES
-        cardNumber : TEXT
-        expiryDate : TEXT
+        PRIVATE cardNumber : TEXT
+        PRIVATE expiryDate : TEXT
 
     CONSTRUCTOR(a : NUMBER, card : TEXT, expiry : TEXT)
         CALL PaymentMethod.CONSTRUCTOR(a)
