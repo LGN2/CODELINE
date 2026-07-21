@@ -1356,9 +1356,9 @@ CLASS Vehicle
         PRIVATE engine : Engine
 
     CONSTRUCTOR(plate : TEXT, fuel : NUMBER, e : Engine)
-        SET licencePlate TO plate
-        SET fuelLevel TO fuel
-        SET engine TO e
+        SET this.licencePlate TO plate
+        SET this.fuelLevel TO fuel
+        SET this.engine TO e
     END CONSTRUCTOR
 
     METHODS
