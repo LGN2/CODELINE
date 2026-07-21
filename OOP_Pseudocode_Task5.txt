@@ -1713,8 +1713,8 @@ END CLASS
 
 CLASS DebitCard INHERITS Card
     ATTRIBUTES
-        linkedAccount : BankAccount
-        purchases : LIST<Purchase>
+        PRIVATE linkedAccount : BankAccount
+        PRIVATE purchases : LIST<Purchase>
 
     CONSTRUCTOR(number : TEXT, expiry : TEXT, securityData : TEXT, account : BankAccount)
         CALL Card.CONSTRUCTOR(number, expiry, securityData)
