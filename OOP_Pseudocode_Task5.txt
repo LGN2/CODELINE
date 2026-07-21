@@ -852,8 +852,8 @@ END CLASS
 
 CLASS OnlineStore
     ATTRIBUTES
-        storeName : TEXT
-        orders : LIST<Order>
+        PRIVATE storeName : TEXT
+        PRIVATE orders : LIST<Order>
 
     CONSTRUCTOR(name : TEXT)
         SET storeName TO name
