@@ -1456,9 +1456,9 @@ END CLASS
 
 CLASS LogisticsCompany
     ATTRIBUTES
-        companyName : TEXT
-        vehicles : LIST<Vehicle>
-        routes : LIST<Route>
+        PRIVATE companyName : TEXT
+        PRIVATE vehicles : LIST<Vehicle>
+        PRIVATE routes : LIST<Route>
 
     CONSTRUCTOR(name : TEXT)
         SET companyName TO name
