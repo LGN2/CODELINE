@@ -1813,9 +1813,9 @@ END CLASS
 
 CLASS Bank
     ATTRIBUTES
-        bankName : TEXT
-        cards : LIST<Card>
-        accounts : LIST<BankAccount>
+        PRIVATE bankName : TEXT
+        PRIVATE cards : LIST<Card>
+        PRIVATE accounts : LIST<BankAccount>
 
     CONSTRUCTOR(name : TEXT)
         SET bankName TO name
