@@ -1671,10 +1671,10 @@ END CLASS
 
 CLASS Card
     ATTRIBUTES
-        cardNumber : TEXT
-        expiryDate : TEXT
-        status : TEXT
-        chip : Chip
+        PRIVATE cardNumber : TEXT
+        PRIVATE expiryDate : TEXT
+        PRIVATE status : TEXT
+        PRIVATE chip : Chip
 
     CONSTRUCTOR(number : TEXT, expiry : TEXT, securityData : TEXT)
         SET cardNumber TO number
