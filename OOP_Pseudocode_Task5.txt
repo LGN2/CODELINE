@@ -655,8 +655,8 @@ CLASS CreditCardPayment INHERITS PaymentMethod
 
     CONSTRUCTOR(a : NUMBER, card : TEXT, expiry : TEXT)
         CALL PaymentMethod.CONSTRUCTOR(a)
-        SET cardNumber TO card
-        SET expiryDate TO expiry
+        SET this.cardNumber TO card
+        SET this.expiryDate TO expiry
     END CONSTRUCTOR
 
     METHODS
