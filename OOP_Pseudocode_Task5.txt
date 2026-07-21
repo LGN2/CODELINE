@@ -685,8 +685,8 @@ CLASS BankTransferPayment INHERITS PaymentMethod
 
     CONSTRUCTOR(a : NUMBER, account : TEXT)
         CALL PaymentMethod.CONSTRUCTOR(a)
-        SET accountNumber TO account
-        SET delayCompleted TO FALSE
+        SET this.accountNumber TO account
+        SET this.delayCompleted TO FALSE
     END CONSTRUCTOR
 
     METHODS
