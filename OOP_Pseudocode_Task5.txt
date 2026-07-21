@@ -1406,8 +1406,8 @@ END CLASS
 
 CLASS Motorbike INHERITS Vehicle
     ATTRIBUTES
-        maximumPackageWeight : NUMBER
-        averageSpeed : NUMBER
+        PRIVATE maximumPackageWeight : NUMBER
+        PRIVATE averageSpeed : NUMBER
 
     CONSTRUCTOR(plate : TEXT, fuel : NUMBER, e : Engine, maxWeight : NUMBER, speed : NUMBER)
         CALL Vehicle.CONSTRUCTOR(plate, fuel, e)
