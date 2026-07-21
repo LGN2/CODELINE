@@ -1310,9 +1310,9 @@ CLASS Route
         PRIVATE stops : LIST<Stop>
 
     CONSTRUCTOR(name : TEXT, d : NUMBER)
-        SET routeName TO name
-        SET distance TO d
-        SET stops TO LIST []
+        SET this.routeName TO name
+        SET this.distance TO d
+        SET this.stops TO LIST []
     END CONSTRUCTOR
 
     METHODS
