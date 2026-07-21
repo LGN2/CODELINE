@@ -1461,9 +1461,9 @@ CLASS LogisticsCompany
         PRIVATE routes : LIST<Route>
 
     CONSTRUCTOR(name : TEXT)
-        SET companyName TO name
-        SET vehicles TO LIST []
-        SET routes TO LIST []
+        SET this.companyName TO name
+        SET this.vehicles TO LIST []
+        SET this.routes TO LIST []
     END CONSTRUCTOR
 
     METHODS
