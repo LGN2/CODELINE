@@ -1436,8 +1436,8 @@ CLASS Truck INHERITS Vehicle
 
     CONSTRUCTOR(plate : TEXT, fuel : NUMBER, e : Engine, capacity : NUMBER, speed : NUMBER)
         CALL Vehicle.CONSTRUCTOR(plate, fuel, e)
-        SET loadCapacity TO capacity
-        SET restrictedRoadSpeed TO speed
+        SET this.loadCapacity TO capacity
+        SET this.restrictedRoadSpeed TO speed
     END CONSTRUCTOR
 
     METHODS
