@@ -1604,7 +1604,7 @@ CLASS Chip
         PRIVATE encryptedSecurityData : TEXT
 
     CONSTRUCTOR(data : TEXT)
-        SET encryptedSecurityData TO data
+        SET this.encryptedSecurityData TO data
     END CONSTRUCTOR
 
     METHODS
