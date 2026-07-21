@@ -630,8 +630,8 @@ CLASS PaymentMethod
         PRIVATE status : TEXT
 
     CONSTRUCTOR(a : NUMBER)
-        SET amount TO a
-        SET status TO "Pending"
+        SET this.amount TO a
+        SET this.status TO "Pending"
     END CONSTRUCTOR
 
     METHODS
