@@ -1431,8 +1431,8 @@ END CLASS
 
 CLASS Truck INHERITS Vehicle
     ATTRIBUTES
-        loadCapacity : NUMBER
-        restrictedRoadSpeed : NUMBER
+        PRIVATE loadCapacity : NUMBER
+        PRIVATE restrictedRoadSpeed : NUMBER
 
     CONSTRUCTOR(plate : TEXT, fuel : NUMBER, e : Engine, capacity : NUMBER, speed : NUMBER)
         CALL Vehicle.CONSTRUCTOR(plate, fuel, e)
