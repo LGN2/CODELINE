@@ -1351,9 +1351,9 @@ END CLASS
 
 CLASS Vehicle
     ATTRIBUTES
-        licencePlate : TEXT
-        fuelLevel : NUMBER
-        engine : Engine
+        PRIVATE licencePlate : TEXT
+        PRIVATE fuelLevel : NUMBER
+        PRIVATE engine : Engine
 
     CONSTRUCTOR(plate : TEXT, fuel : NUMBER, e : Engine)
         SET licencePlate TO plate
