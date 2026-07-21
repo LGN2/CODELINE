@@ -1074,10 +1074,10 @@ END CLASS
 
 CLASS UserAccount
     ATTRIBUTES
-        userName : TEXT
-        emailAddress : TEXT
-        subscription : Subscription
-        watchHistory : LIST<WatchRecord>
+        PRIVATE userName : TEXT
+        PRIVATE emailAddress : TEXT
+        PRIVATE subscription : Subscription
+        PRIVATE watchHistory : LIST<WatchRecord>
 
     CONSTRUCTOR(name : TEXT, email : TEXT, sub : Subscription)
         SET userName TO name
