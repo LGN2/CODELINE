@@ -964,9 +964,9 @@ CLASS Subscription
         PRIVATE endDate : TEXT
 
     CONSTRUCTOR(start : TEXT, price : NUMBER, end : TEXT)
-        SET startDate TO start
-        SET monthlyPrice TO price
-        SET endDate TO end
+        SET this.startDate TO start
+        SET this.monthlyPrice TO price
+        SET this.endDate TO end
     END CONSTRUCTOR
 
     METHODS
