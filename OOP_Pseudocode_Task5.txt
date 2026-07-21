@@ -626,8 +626,8 @@ TASK 296
 
 CLASS PaymentMethod
     ATTRIBUTES
-        amount : NUMBER
-        status : TEXT
+        PRIVATE amount : NUMBER
+        PRIVATE status : TEXT
 
     CONSTRUCTOR(a : NUMBER)
         SET amount TO a
