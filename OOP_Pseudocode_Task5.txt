@@ -680,8 +680,8 @@ END CLASS
 
 CLASS BankTransferPayment INHERITS PaymentMethod
     ATTRIBUTES
-        accountNumber : TEXT
-        delayCompleted : BOOLEAN
+        PRIVATE accountNumber : TEXT
+        PRIVATE delayCompleted : BOOLEAN
 
     CONSTRUCTOR(a : NUMBER, account : TEXT)
         CALL PaymentMethod.CONSTRUCTOR(a)
